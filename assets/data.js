@@ -1,5 +1,5 @@
 ﻿/* ===========================================================
-   Quality Network â€” content (single source of truth)
+   Quality Network — content (single source of truth)
    Transcribed from the Quality Network mind map
    =========================================================== */
 
@@ -12,6 +12,12 @@ const COMPANY = {
   email: 'quality@qualityegypt.com',
   address: '13 El Obour Buildings, Salah Salem St., Cairo, Egypt',
   site: 'https://qualityegypt.com/'
+};
+
+const AUTHOR = {
+  name: 'Seif Eldin',
+  github: 'https://github.com/seifmomo',
+  linkedin: 'https://www.linkedin.com/in/seif-said-a9441b366'
 };
 
 /* The 9 tabs of the site */
@@ -30,7 +36,7 @@ const MINDMAP = [
   {
     id: 'active', no: '01', title: 'Active / WiFi',
     note: 'Core and access switching, wireless access points, controllers, routers, firewalls and PoE.',
-    blurb: 'The switching layer â€” from access ports at the desk to the core in the comms room, plus the wireless that carries it.',
+    blurb: 'The switching layer — from access ports at the desk to the core in the comms room, plus the wireless that carries it.',
     brands: [
       {b: 'Huawei', with: ['Redingtone', 'Metra', 'Mantrac']},
       {b: 'Cisco', with: ['Metra', 'Mantrac']},
@@ -42,7 +48,7 @@ const MINDMAP = [
   {
     id: 'industrial', no: '02', title: 'Industrial SW',
     note: 'Network management, monitoring and configuration platforms.',
-    blurb: 'The software that keeps the network honest â€” management, monitoring, controller platforms and licences.',
+    blurb: 'The software that keeps the network honest — management, monitoring, controller platforms and licences.',
     brands: [
       {b: 'Planet', with: ['Pro-Vid']},
       {b: 'Antaira', with: ['El Con Novd']},
@@ -53,7 +59,7 @@ const MINDMAP = [
   {
     id: 'passive', no: '03', title: 'Passive',
     note: 'Structured cabling, pathways, patching, labelling, testing and certification.',
-    blurb: 'Everything that carries the signal â€” copper and fibre cabling, pathways, patching and the certificates that prove it.',
+    blurb: 'Everything that carries the signal — copper and fibre cabling, pathways, patching and the certificates that prove it.',
     brands: [
       {b: 'El Sweedy', with: []},
       {b: 'Legrand', with: ['Universe']},
@@ -69,7 +75,7 @@ const MINDMAP = [
   {
     id: 'rack', no: '04', title: 'Rack',
     note: 'Racks, enclosures, power distribution, UPS and data room containment.',
-    blurb: 'Where the kit actually lives â€” racks, power, cooling and the room that holds them.',
+    blurb: 'Where the kit actually lives — racks, power, cooling and the room that holds them.',
     brands: [
       {b: 'ACS', with: []},
       {b: 'Pro-Rack', with: ['Brand Connection']},
@@ -81,7 +87,7 @@ const MINDMAP = [
   {
     id: 'phone', no: '05', title: 'IP Telephone',
     note: 'IP PBX, handsets, call management and voice over data.',
-    blurb: 'Voice on the same network as data â€” PBX, handsets, call management and voice over data.',
+    blurb: 'Voice on the same network as data — PBX, handsets, call management and voice over data.',
     brands: [
       {b: 'Alcatel', with: ['Smart Technology']},
       {b: 'Mitel', with: ['Spec Egypt']},

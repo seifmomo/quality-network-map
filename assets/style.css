@@ -1,6 +1,6 @@
 /* ===========================================================
-   Quality Network â€” light UI
-   White canvas Â· emerald accent Â· quiet motion
+   Quality Network — light UI
+   White canvas · emerald accent · quiet motion
    =========================================================== */
 
 :root{
@@ -249,7 +249,17 @@ body.bar-on .bar{transform:none;opacity:1}
 .legend i{width:11px;height:11px;border-radius:50%;background:linear-gradient(140deg,var(--em),var(--em-mid))}
 .legend i.dir{background:var(--warm);border-radius:3px}
 
-/* ---------------- grids ---------------- */
+/* partners band */
+.band{
+  display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin-top:22px;padding:20px 22px;
+  border:1px solid var(--line);border-radius:16px;background:var(--white);box-shadow:var(--shadow-s);
+}
+.band-txt b{display:block;font-size:1rem;font-weight:750}
+.band-txt span{display:block;font-size:.8rem;color:var(--muted);margin-top:2px}
+.band .chips{flex:1 1 320px}
+.band .btn{margin-left:auto}
+
+/* grids ---------------- */
 .grid{display:grid;gap:14px}
 .g2{grid-template-columns:repeat(2,1fr)}
 .g3{grid-template-columns:repeat(3,1fr)}
@@ -385,6 +395,20 @@ body.bar-on .bar{transform:none;opacity:1}
 .foot-in{display:flex;gap:14px;flex-wrap:wrap;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted)}
 .foot a:hover{color:var(--em)}
 .foot b{color:var(--ink)}
+.credit{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:.82rem;color:var(--muted);
+  border-top:1px solid var(--line);margin-top:18px;padding-top:18px;
+}
+.credit .dot{width:4px;height:4px;border-radius:50%;background:var(--line-2)}
+.credit .who{color:var(--ink);font-weight:650}
+.credit .soc{margin-left:auto;display:flex;gap:8px}
+.credit .soc a{
+  display:inline-flex;align-items:center;gap:8px;padding:7px 13px;border-radius:999px;
+  background:var(--white);border:1px solid var(--line);font-weight:650;color:var(--ink-2);
+  transition:.24s var(--ease);
+}
+.credit .soc a:hover{border-color:var(--em-mid);color:var(--em);transform:translateY(-2px);box-shadow:var(--shadow-s)}
+.credit .soc svg{width:15px;height:15px;color:var(--em)}
 
 /* ---------------- reveal once ---------------- */
 [data-fade]{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease),transform .7s var(--ease)}

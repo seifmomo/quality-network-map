@@ -15,7 +15,7 @@ has been scrolled past.
 
 | Tab | Page | Contents |
 | --- | --- | --- |
-| Home | `index.html` | Logo hero, section list, at-a-glance strip, full map overview, brand wall |
+| Home | `index.html` | Logo hero, section list, the whole map (27 brands in 5 columns), partners band, brand wall |
 | Active / WiFi | `active.html` | Huawei, Cisco, Aruba, D-Link, TP-Link |
 | Industrial SW | `industrial.html` | Planet, Antaira, TrendNet, Huawei iMaster |
 | Passive | `passive.html` | Legrand, Leviton, Panduit, Datwyler, CommScope, Pro Link, Black Stone, El Sweedy, Premium Line |
@@ -51,6 +51,15 @@ Hovering a row highlights the whole line.
 4. The **top bar stays hidden while the hero is on screen** and slides down only after the hero
    has been fully scrolled past, so navigation never interrupts the first view. Scrolling back up
    hides it again.
+
+Straight after the hero comes the map itself — all 27 brand entries in five branch columns — and a
+**partners band** listing all 18 supply partners with a link into the Supply partners tab.
+
+## Credit
+
+Built by **Seif Eldin** — footer links to
+[GitHub](https://github.com/seifmomo) and
+[LinkedIn](https://www.linkedin.com/in/seif-said-a9441b366).
 
 ## The tabs
 

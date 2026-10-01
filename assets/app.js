@@ -84,6 +84,9 @@
   $('#mob').innerHTML = TABS.map(t =>
     `<a href="${t.file}"${t.id === PAGE ? ' class="on"' : ''}><span>${esc(t.label)}</span><i>${esc(t.sub)}</i></a>`).join('');
 
+  const GH  = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.12 3.05.74.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.4-5.25 5.69.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg>';
+  const LI  = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.5c0-1.3-.02-3-1.83-3-1.84 0-2.12 1.43-2.12 2.9V21h-4V9Z"/></svg>';
+
   $('#foot').innerHTML = `
     <div class="foot-in">
       <div><b>Quality — ${esc(COMPANY.branch)}</b><br>${esc(COMPANY.address)}</div>
@@ -92,6 +95,15 @@
         <a href="mailto:${COMPANY.email}">${esc(COMPANY.email)}</a>
         <a href="${COMPANY.site}" target="_blank" rel="noopener">qualityegypt.com</a>
       </div>
+    </div>
+    <div class="credit">
+      <span>Made by <span class="who">${esc(AUTHOR.name)}</span></span>
+      <span class="dot"></span>
+      <span>for Quality Egyptian Engineering Projects</span>
+      <span class="soc">
+        <a href="${AUTHOR.github}" target="_blank" rel="noopener">${GH} GitHub</a>
+        <a href="${AUTHOR.linkedin}" target="_blank" rel="noopener">${LI} LinkedIn</a>
+      </span>
     </div>`;
 
   /* cards / matrix switch */
@@ -122,12 +134,8 @@
         <span class="arw">${ARROW}</span>
       </a>`).join('');
 
-    $('#strip').innerHTML = [
-      [MINDMAP.length, 'branches'],
-      [BRAND_COUNT, 'brand entries'],
-      [SUPPLY.length, 'supply partners'],
-      [DIRECT.length, 'direct brands']
-    ].map(([n, l]) => `<div data-fade><b class="grad">${n}</b><span>${l}</span></div>`).join('');
+    $('#bandcount').textContent = `${SUPPLY.length} partners behind the five branches`;
+    $('#bandchips').innerHTML = SUPPLY.map(s => `<span class="chip">${esc(s.p)}</span>`).join('');
 
     $('#ov').innerHTML = MINDMAP.map(m => `
       <div class="ov-col" data-fade>
