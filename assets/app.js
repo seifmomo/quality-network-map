@@ -68,28 +68,24 @@
 
   /* ---------------- home ---------------- */
   if (PAGE === 'home') {
-    $('#hphone').textContent = COMPANY.phone;
-
-    const nodes = [
+    const rows = [
       ...MINDMAP.map(m => ({
-        href: file(m.id), ix: m.no, title: m.title, n: m.brands.length,
-        meta: m.brands.reduce((a, b) => a + b.with.length, 0) + ' supply links',
-        list: m.brands.slice(0, 4).map(b => b.b),
-        more: m.brands.length > 4 ? `+${m.brands.length - 4}` : ''
+        href: file(m.id), ix: m.no, title: m.title,
+        n: `${m.brands.length} ${m.brands.length === 1 ? 'brand' : 'brands'}`,
+        tags: m.brands.map(b => b.b).join(' · ')
       })),
-      {href: 'supply.html', ix: '06', title: 'Supply partners', n: SUPPLY.length,
-        meta: 'across all five branches', list: SUPPLY.slice(0, 4).map(s => s.p), more: `+${SUPPLY.length - 4}`},
-      {href: 'contact.html', ix: '07', title: 'Contact', n: 0,
-        meta: 'Cairo, Egypt', list: [COMPANY.phone, COMPANY.email], more: ''}
+      {href: 'supply.html', ix: '06', title: 'Supply partners',
+       n: `${SUPPLY.length} partners`, tags: SUPPLY.slice(0, 8).map(s => s.p).join(' · ') + ' …'},
+      {href: 'contact.html', ix: '07', title: 'Contact', n: 'Cairo, Egypt',
+       tags: `${COMPANY.phone} · ${COMPANY.email}`}
     ];
 
-    $('#nodes').innerHTML = nodes.map(x => `
-      <a class="node" href="${x.href}" data-fade>
-        <span class="cnt">${String(x.n).padStart(2, '0')}</span>
-        <span class="top"><span class="ix">${x.ix}</span><span class="arw">${ARROW}</span></span>
-        <h3>${esc(x.title)}</h3>
-        <div class="meta">${esc(x.meta)}</div>
-        <div class="list">${x.list.map(v => `<span>${esc(v)}</span>`).join('')}${x.more ? `<span>${x.more}</span>` : ''}</div>
+    $('#nodes').innerHTML = rows.map((r, i) => `
+      <a class="row" href="${r.href}" data-fade style="transition-delay:${120 + i * 55}ms">
+        <span class="ix">${r.ix}</span>
+        <span class="nm"><b>${esc(r.title)}</b><i>${esc(r.n)}</i></span>
+        <span class="tags">${esc(r.tags)}</span>
+        <span class="arw">${ARROW}</span>
       </a>`).join('');
 
     $('#strip').innerHTML = [
@@ -105,35 +101,6 @@
         <ul>${m.brands.map(b => `<li><b>${esc(b.b)}</b><span class="${b.with.length ? '' : 'none'}">${b.with.length ? b.with.map(esc).join(' · ') : 'direct supply'}</span></li>`).join('')}</ul>
         <a class="more" href="${file(m.id)}">Open tab ${BIG}</a>
       </div>`).join('');
-
-    /* --- connector lines: hub → every node --- */
-    const tree = $('#tree'), svg = $('#lines'), hub = $('.hub');
-    const draw = () => {
-      const box = tree.getBoundingClientRect();
-      const hb  = hub.getBoundingClientRect();
-      svg.setAttribute('viewBox', `0 0 ${box.width} ${box.height}`);
-      svg.setAttribute('width', box.width);
-      svg.setAttribute('height', box.height);
-      const x0 = hb.left - box.left + hb.width / 2;
-      const y0 = hb.bottom - box.top;
-      svg.innerHTML = $$('.node', tree).map((n, i) => {
-        const nb = n.getBoundingClientRect();
-        const x1 = nb.left - box.left + nb.width / 2;
-        const y1 = nb.top - box.top;
-        const dy = Math.max(24, (y1 - y0) * .55);
-        const p = `M${x0},${y0} C${x0},${y0 + dy} ${x1},${y1 - dy} ${x1},${y1}`;
-        return `<path d="${p}" style="--len:900;animation-delay:${.3 + i * .07}s" data-i="${i}"></path>`;
-      }).join('');
-    };
-    const redraw = () => requestAnimationFrame(draw);
-    addEventListener('resize', redraw);
-    addEventListener('load', redraw);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(redraw);
-    $$('.node', tree).forEach((n, i) => {
-      n.addEventListener('mouseenter', () => { const p = $(`path[data-i="${i}"]`, svg); if (p) p.classList.add('hot'); });
-      n.addEventListener('mouseleave', () => { const p = $(`path[data-i="${i}"]`, svg); if (p) p.classList.remove('hot'); });
-    });
-    draw();
   }
 
   /* ---------------- branch tabs ---------------- */
@@ -283,15 +250,14 @@
     });
   }
 
-  /* ---------------- bar + hero collapse ---------------- */
+  /* ---------------- bar appears only after the hero ---------------- */
   const bar = $('#bar'), hero = $('.hero'), mob = $('#mob'), burger = $('.burger');
-  const TOP = 40;
 
   const sync = () => {
-    if (PAGE === 'home') {
-      const down = scrollY > TOP;
-      document.body.classList.toggle('bar-on', down);
-      if (hero) hero.classList.toggle('sunk', down);
+    if (PAGE === 'home' && hero) {
+      /* hero fully scrolled past → bar slides in */
+      const end = hero.offsetTop + hero.offsetHeight;
+      document.body.classList.toggle('bar-on', scrollY >= end - 2);
     } else {
       document.body.classList.add('bar-on');
     }
@@ -299,13 +265,7 @@
   };
   sync();
   addEventListener('scroll', sync, {passive: true});
-
-  /* any key press folds the hero menu back into the bar */
-  addEventListener('keydown', e => {
-    if (['Escape', 'ArrowDown', 'PageDown'].includes(e.key)) {
-      scrollTo({top: TOP + 140, behavior: 'smooth'});
-    }
-  });
+  addEventListener('resize', sync, {passive: true});
 
   burger.addEventListener('click', () => {
     const open = mob.classList.toggle('on');

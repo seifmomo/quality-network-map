@@ -9,8 +9,9 @@
 ![Quality Network / Data — home tab](img/preview.png)
 
 A clean white-canvas site for the **Quality Network / Data** division.
-Every section is its own tab (page), and the hero carries the Quality logo above a
-**connector tree** that folds away into a slim top bar as soon as you scroll.
+Every section is its own tab (page). The home hero is deliberately plain: the Quality logo,
+one line, and a **list of the seven sections** — then the top bar slides in only once the hero
+has been scrolled past.
 
 | Tab | Page | Contents |
 | --- | --- | --- |
@@ -27,15 +28,15 @@ Every section is its own tab (page), and the hero carries the Quality logo above
 
 ---
 
-## The hero selector
+## The home hero
 
-1. The **Quality logo** sits centred at the top of the hero (`img/quality-logo.png`).
-2. A pill-shaped **hub** — *Quality · Network / Data* — anchors a **connector tree**: curved
-   SVG lines are drawn from the hub down to every section card, animated stroke by stroke.
-3. Each card shows its index, title, count and the first brands; hovering a card lights its
-   connector line.
-4. Scrolling — or pressing `Esc`, `↓`, `PageDown` — collapses the tree and slides the slim top
-   bar back in, so navigation is always one click away.
+1. The **Quality logo** sits centred at the top (`img/quality-logo.png`).
+2. One line of text, then a **clean list of the seven sections** — number, name, count and the
+   brands inside, each row a full-width link that slides slightly and grows a green edge on hover.
+3. The whole hero fits one screen (≈750 px tall), with no headings, stats or clutter.
+4. The **top bar stays hidden while the hero is on screen** and slides down only after the hero
+   has been fully scrolled past, so navigation never interrupts the first view. Scrolling back up
+   hides it again.
 
 ## The tabs
 
@@ -62,8 +63,8 @@ img/preview.png
 
 - White canvas, emerald `#0F7A52` / `#12B981` accent with a warm `#F26522` highlight.
 - Hairline `#E3E9E6` borders, soft shadows, glass-free and print-friendly.
-- Motion: hero logo pop-in, staggered card reveals, drawn SVG connectors, hover sweeps,
-  one-shot fade-in on scroll, animated scroll-progress line.
+- Motion: logo pop-in, staggered row reveals, hover slide + accent edge, animated active-tab
+  underline, smooth bar slide-down, scroll-progress line, one-shot fade-in on scroll.
 - No build step, no dependencies: static HTML + CSS + vanilla JS.
 - `prefers-reduced-motion` respected; print stylesheet included.
 
