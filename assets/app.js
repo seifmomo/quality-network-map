@@ -271,15 +271,6 @@
     $('#body').innerHTML = `
       <section class="section tight">
         <div class="wrap">
-          <div class="strip" style="margin-bottom:22px">
-            ${[
-              [branch.brands.length, 'brands here'],
-              [branch.brands.filter(b => !b.with.length).length, 'direct supply'],
-              [new Set(branch.brands.flatMap(b => b.with)).size, 'supply partners'],
-              [branch.no, 'branch no.']
-            ].map(([n, l]) => `<div data-fade><b class="grad">${n}</b><span>${l}</span></div>`).join('')}
-          </div>
-
           <div class="sechead" style="display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap">
             <div>
               <span class="eyebrow" data-fade>Brands</span>

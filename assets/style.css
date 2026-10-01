@@ -80,7 +80,7 @@ p{margin:0}
 }
 body.bar-on .bar{transform:none;opacity:1}
 .bar.stuck{border-color:var(--line);box-shadow:0 10px 30px -24px rgba(11,21,18,.5)}
-.bar-in{display:flex;align-items:center;gap:14px;width:min(var(--w),92vw)}
+.bar-in{display:flex;align-items:center;gap:14px;width:min(var(--w),92vw);margin-inline:auto}
 .bar .logo{height:24px;width:auto}
 .bar .brand{font-size:.74rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
 .bar nav{margin-left:auto;display:flex;align-items:center;gap:1px}
@@ -409,13 +409,6 @@ body.bar-on .bar{transform:none;opacity:1}
 .scard .br{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:.75rem}
 .scard .br i{font-style:normal;color:var(--muted)}
 .scard .br b{font-weight:650}
-
-/* stats */
-.strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-@media (max-width:860px){.strip{grid-template-columns:repeat(2,1fr)}}
-.strip div{padding:20px;border-radius:16px;background:var(--white);border:1px solid var(--line);box-shadow:var(--shadow-s)}
-.strip b{display:block;font-size:clamp(1.6rem,3vw,2.2rem);font-weight:850;letter-spacing:-.03em}
-.strip span{display:block;margin-top:5px;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
 
 /* overview columns */
 .ov{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
