@@ -1,0 +1,217 @@
+/* ===========================================================
+   Quality Network — one page, everything visible
+   Light, corporate, print-like. Fade-in only.
+   =========================================================== */
+
+:root{
+  --paper:#ffffff;
+  --paper-2:#f6f8f7;
+  --ink:#16211c;
+  --ink-2:#3d4a44;
+  --muted:#6b7873;
+  --line:#dde4e0;
+  --line-2:#c3cec8;
+  --green:#206242;
+  --green-2:#2f9e6b;
+  --green-3:#4fd79a;
+  --orange:#ff6900;
+  --bar:60px;
+  --w:1180px;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+
+html{scroll-behavior:smooth}
+
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font:400 16px/1.62 "Segoe UI",Inter,system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+img{display:block;max-width:100%}
+
+a{color:inherit}
+
+h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.015em;line-height:1.15}
+h1,h2,.serif{font-family:Georgia,"Iowan Old Style","Times New Roman",serif;font-weight:400}
+p{margin:0}
+
+.wrap{width:min(var(--w),92vw);margin-inline:auto}
+
+.eyebrow{
+  font-size:.7rem;letter-spacing:.24em;text-transform:uppercase;color:var(--green);
+  font-weight:700;
+}
+
+.rule{height:1px;background:var(--line);border:0;margin:0}
+
+/* ---------------- top bar ---------------- */
+.bar{
+  position:sticky;top:0;z-index:50;background:rgba(255,255,255,.94);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line);
+}
+.bar-in{
+  height:var(--bar);display:flex;align-items:center;gap:22px;
+}
+.bar img.logo{height:24px;width:auto}
+.bar .brand-name{
+  font-family:Georgia,serif;font-size:1.02rem;letter-spacing:.01em;
+  padding-left:18px;border-left:1px solid var(--line-2);
+}
+.bar.stuck{border-bottom-color:var(--line-2);box-shadow:0 8px 24px -24px rgba(22,33,28,.7)}
+.bar nav{margin-left:auto;display:flex;gap:2px}
+.bar nav a{
+  padding:7px 11px;border-radius:4px;font-size:.85rem;color:var(--ink-2);text-decoration:none;
+}
+.bar nav a:hover{background:var(--paper-2);color:var(--green)}
+.bar .tel{font-size:.85rem;font-weight:600;text-decoration:none;padding-left:16px;border-left:1px solid var(--line-2)}
+
+@media (max-width:900px){
+  .bar nav{display:none}
+  .bar .tel{margin-left:auto;border-left:0;padding-left:0}
+}
+
+/* ---------------- header ---------------- */
+.head{padding:clamp(48px,8vw,104px) 0 clamp(34px,5vw,56px);border-bottom:1px solid var(--line)}
+.head h1{font-size:clamp(2rem,5vw,3.4rem);margin:18px 0 0;max-width:20ch}
+.head .path{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:20px;
+  font-size:.95rem;color:var(--muted);
+}
+.head .path .node{
+  padding:7px 14px;border:1px solid var(--line-2);border-radius:3px;
+  background:var(--paper);color:var(--ink);font-weight:600;
+}
+.head .path .node.root{border-color:var(--green);color:var(--green)}
+.head .lead{margin-top:22px;font-size:clamp(1rem,1.6vw,1.16rem);color:var(--ink-2);max-width:62ch}
+.legend{
+  display:flex;gap:26px;flex-wrap:wrap;margin-top:30px;padding-top:20px;border-top:1px solid var(--line);
+  font-size:.82rem;color:var(--muted);
+}
+.legend span b{color:var(--ink);font-weight:600}
+
+/* ---------------- the map ---------------- */
+.map{padding:clamp(36px,6vw,64px) 0 clamp(20px,3vw,32px)}
+
+.legend-key{
+  display:flex;align-items:center;gap:10px;font-size:.78rem;color:var(--muted);
+}
+.legend-key .dot{width:7px;height:7px;border-radius:50%;background:var(--green-2)}
+
+/* spine */
+.tree{position:relative;padding-top:8px}
+.tree .stem{height:44px;position:relative}
+.tree .stem::before{
+  content:"";position:absolute;left:11px;top:0;bottom:0;width:1px;background:var(--line-2);
+}
+.tree .stem::after{
+  content:"";position:absolute;left:11px;bottom:0;width:22px;height:1px;background:var(--line-2);
+}
+
+.branches{position:relative}
+.branches::before{
+  content:"";position:absolute;left:11px;top:0;bottom:0;width:1px;background:var(--line-2);
+}
+
+.branch{padding:clamp(26px,3.4vw,40px) 0;border-bottom:1px solid var(--line)}
+.branch:last-child{border-bottom:0}
+
+.branch-lbl{position:relative;padding-left:38px;margin-bottom:22px}
+.branch-lbl::before{
+  content:"";position:absolute;left:11px;top:16px;width:27px;height:1px;background:var(--line-2);
+}
+.branch-lbl::after{
+  content:"";position:absolute;left:6px;top:11px;width:11px;height:11px;border-radius:50%;
+  background:var(--paper);border:2px solid var(--green-2);
+}
+.branch-lbl .no{
+  font-family:Georgia,serif;font-size:.9rem;color:var(--green);letter-spacing:.08em;
+}
+.branch-lbl h2{font-size:clamp(1.4rem,3vw,2rem);margin-top:4px}
+.branch-lbl p{margin-top:8px;color:var(--muted);font-size:.94rem;max-width:56ch}
+
+.items{
+  display:grid;gap:0 clamp(20px,3vw,44px);
+  grid-template-columns:repeat(auto-fill,minmax(215px,1fr));
+  border-top:1px solid var(--line);
+}
+.item{
+  display:flex;flex-direction:column;gap:7px;
+  padding:16px 0 15px;border-bottom:1px solid var(--line);
+}
+.item .brand{
+  display:flex;align-items:center;gap:9px;
+  font-size:1.02rem;font-weight:600;letter-spacing:-.005em;
+}
+.item .brand img{width:26px;height:17px;object-fit:contain;opacity:.85}
+.item .partners{
+  font-size:.83rem;color:var(--green);line-height:1.5;
+}
+.item .partners i{font-style:normal;color:var(--line-2);margin:0 5px}
+.item .partners .none{color:var(--muted);font-style:italic;letter-spacing:.02em}
+
+/* ---------------- supply partners ---------------- */
+.supply{padding:clamp(40px,6vw,72px) 0;border-top:1px solid var(--line);background:var(--paper-2)}
+.supply h2{font-size:clamp(1.4rem,3vw,2rem);margin:14px 0 0}
+.supply .lead{margin-top:12px;color:var(--muted);max-width:60ch}
+.sup-table{
+  margin-top:32px;border-top:1px solid var(--line-2);
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+}
+.sup-row{
+  display:flex;gap:16px;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--line);
+  font-size:.92rem;
+}
+.sup-row b{font-weight:600;white-space:nowrap}
+.sup-row span{color:var(--muted);font-size:.82rem}
+
+/* ---------------- wall photo ---------------- */
+.wall{padding:clamp(40px,6vw,72px) 0}
+.wall h2{font-size:clamp(1.3rem,2.6vw,1.8rem);margin:14px 0 22px}
+.wall figure{margin:0;border:1px solid var(--line);background:var(--paper-2)}
+.wall img{width:100%;height:auto}
+.wall figcaption{padding:12px 16px;font-size:.82rem;color:var(--muted);border-top:1px solid var(--line)}
+.wall figure.no-img img{display:none}
+.wall figure.no-img::before{content:"brand wall photo not bundled";display:block;padding:40px 16px;font-size:.85rem;color:var(--muted)}
+
+/* ---------------- contact ---------------- */
+.contact{padding:clamp(40px,6vw,72px) 0;border-top:1px solid var(--line)}
+.contact-grid{
+  display:grid;gap:0 clamp(20px,3vw,40px);
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  border-top:1px solid var(--line-2);
+}
+.contact-grid div{padding:20px 0;border-bottom:1px solid var(--line)}
+.contact-grid dt{
+  font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;
+}
+.contact-grid dd{margin:0;font-size:.98rem}
+.contact-grid a{text-decoration:none;border-bottom:1px solid var(--line-2)}
+.contact-grid a:hover{color:var(--green);border-color:var(--green)}
+
+/* ---------------- footer ---------------- */
+.foot{
+  border-top:1px solid var(--line);padding:26px 0 34px;
+  display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between;
+  font-size:.82rem;color:var(--muted);
+}
+.foot a{text-decoration:none}
+.foot a:hover{color:var(--green)}
+
+/* ---------------- fade in once ---------------- */
+[data-fade]{opacity:0;transform:translateY(12px);transition:opacity .7s cubic-bezier(.22,.75,.25,1),transform .7s cubic-bezier(.22,.75,.25,1)}
+[data-fade].in{opacity:1;transform:none}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none !important;transition-duration:.01ms !important}
+  [data-fade]{opacity:1;transform:none}
+}
+
+/* ---------------- print ---------------- */
+@media print{
+  .bar{display:none}
+  [data-fade]{opacity:1 !important;transform:none !important}
+  .branch{break-inside:avoid}
+  a{text-decoration:none;color:#000}
+}
