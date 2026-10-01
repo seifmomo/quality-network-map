@@ -7,7 +7,6 @@ const COMPANY = {
   brand: 'Quality',
   legal: 'Egyptian Engineering Projects Co.',
   branch: 'Network / Data',
-  logo: 'https://qualityegypt.com/wp-content/uploads/2022/09/QLogoW.png',
   phone: '(+202) 22602665',
   tel: '+20222602665',
   email: 'quality@qualityegypt.com',

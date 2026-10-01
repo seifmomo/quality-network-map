@@ -1,20 +1,20 @@
 # Quality Network — Network / Data
 
-[![Live site](https://img.shields.io/badge/live%20site-seifmomo.github.io-10B981?style=flat-square)](https://seifmomo.github.io/quality-network-map/)
+[![Live site](https://img.shields.io/badge/live%20site-seifmomo.github.io-0F7A52?style=flat-square)](https://seifmomo.github.io/quality-network-map/)
 [![Repo](https://img.shields.io/badge/repo-seifmomo%2Fquality--network--map-2f9e6b?style=flat-square)](https://github.com/seifmomo/quality-network-map)
-[![Pages](https://img.shields.io/badge/sections-8%20tabs-FF7A33?style=flat-square)](#the-eight-tabs)
+[![Tabs](https://img.shields.io/badge/sections-7%20tabs%20%2B%20home-F26522?style=flat-square)](#the-tabs)
 
 ### ➜ **Live: https://seifmomo.github.io/quality-network-map/**
 
-A modern dark site for the **Quality Network / Data** division. Every section lives in its own
-tab (page), and the home hero carries a large centred selector menu that folds away into a slim
-top bar as soon as you scroll.
-
 ![Quality Network / Data — home tab](img/preview.png)
+
+A clean white-canvas site for the **Quality Network / Data** division.
+Every section is its own tab (page), and the hero carries the Quality logo above a
+**connector tree** that folds away into a slim top bar as soon as you scroll.
 
 | Tab | Page | Contents |
 | --- | --- | --- |
-| Home | `index.html` | Centred section menu, at-a-glance strip, full map overview, brand wall |
+| Home | `index.html` | Logo hero, section tree, at-a-glance strip, full map overview, brand wall |
 | Active / WiFi | `active.html` | Huawei, Cisco, Aruba, D-Link, TP-Link |
 | Industrial SW | `industrial.html` | Planet, Antaira, TrendNet, Huawei iMaster |
 | Passive | `passive.html` | Legrand, Leviton, Panduit, Datwyler, CommScope, Pro Link, Black Stone, El Sweedy, Premium Line |
@@ -27,34 +27,45 @@ top bar as soon as you scroll.
 
 ---
 
-## The eight tabs
-
-Every tab is a real page, so it opens in its own browser tab and each URL can be shared or
-bookmarked directly. The top bar and the previous/next links move between tabs in one click.
-
 ## The hero selector
 
-The home hero shows all sections as large centred cards. Scrolling (or pressing `Esc`,
-`↓` / `PageDown`) collapses the hero menu and brings the slim top bar back in — the sections
-stay one scroll away via the bar.
+1. The **Quality logo** sits centred at the top of the hero (`img/quality-logo.png`).
+2. A pill-shaped **hub** — *Quality · Network / Data* — anchors a **connector tree**: curved
+   SVG lines are drawn from the hub down to every section card, animated stroke by stroke.
+3. Each card shows its index, title, count and the first brands; hovering a card lights its
+   connector line.
+4. Scrolling — or pressing `Esc`, `↓`, `PageDown` — collapses the tree and slides the slim top
+   bar back in, so navigation is always one click away.
+
+## The tabs
+
+Every tab is a real page: it opens in its own browser tab, the URL can be shared or
+bookmarked, and each page ends with **previous / next tab** links. The bar marks the current
+tab.
 
 ## Layout
 
 ```
 index.html  active.html  industrial.html  passive.html
 rack.html   phone.html   supply.html      contact.html
-assets/data.js    all content — the single source of truth
-assets/app.js     rendering, tab bar, hero collapse, fades, form
-assets/style.css  design system
+assets/data.js             content — the single source of truth
+assets/app.js              rendering, bar, hero tree, reveals, form
+assets/style.css           design system
+assets/icon.svg            tab icon (green tile + Quality swoosh)
+assets/apple-touch-icon.png
+img/quality-logo.png       Quality logo (dark, for the white UI)
 img/brand-wall.jpg
+img/preview.png
 ```
 
 ## Design
 
-- Deep near-black background with emerald → orange accents, hairline borders, glass cards.
-- Gradient display type, generous spacing, one-shot fade-in on scroll.
-- No build step: static HTML + CSS + vanilla JS, works straight from `file://`.
-- Respects `prefers-reduced-motion`; print styles included.
+- White canvas, emerald `#0F7A52` / `#12B981` accent with a warm `#F26522` highlight.
+- Hairline `#E3E9E6` borders, soft shadows, glass-free and print-friendly.
+- Motion: hero logo pop-in, staggered card reveals, drawn SVG connectors, hover sweeps,
+  one-shot fade-in on scroll, animated scroll-progress line.
+- No build step, no dependencies: static HTML + CSS + vanilla JS.
+- `prefers-reduced-motion` respected; print stylesheet included.
 
 ## Content
 

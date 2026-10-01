@@ -4,9 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Quality — Network / Data</title>
-<meta name="description" content="Quality Network / Data: active and WiFi, industrial software, passive, rack and IP telephony — every brand and its supply partner.">
-<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="assets/style.css">
+<meta name="description" content="Quality Network / Data: active and WiFi, industrial software, passive, rack and IP telephony — every brand and the supply partner behind it.">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="stylesheet" href="assets/style.css?v=3">
 </head>
 <body data-page="home">
 
@@ -16,16 +17,21 @@
 
 <main>
   <section class="hero">
+    <img class="hero-logo" src="img/quality-logo.png" alt="Quality Egyptian Engineering Projects">
     <div class="hero-top wrap">
-      <span class="eyebrow">Quality Egyptian Engineering Projects</span>
-      <h1>Network <span class="grad">/ Data</span></h1>
-      <p class="sub">Every brand in the Quality Network / Data division, the branch it belongs to, and the supply partner behind it. Pick a section to open its own tab — the menu folds away as soon as you scroll.</p>
+      <span class="eyebrow">Network / Data</span>
+      <h1>Pick your <span class="grad">section</span></h1>
+      <p class="sub">Every brand in the Quality Network / Data division, the branch it belongs to and the supply partner behind it. Each section opens in its own tab — and this menu folds into the top bar the moment you scroll.</p>
       <div class="hero-pill"><span class="d"></span> Cairo, Egypt · <b id="hphone">(+202) 22602665</b></div>
     </div>
 
-    <nav class="mega" id="mega" aria-label="Sections"></nav>
+    <div class="tree wrap" id="tree">
+      <div class="hub"><span class="dot"></span><b>Quality</b><span>Network / Data</span></div>
+      <svg class="tree-lines" id="lines" aria-hidden="true"></svg>
+      <nav class="branches" id="nodes" aria-label="Sections"></nav>
+    </div>
 
-    <div class="cue"><i></i> scroll to collapse</div>
+    <div class="cue"><i></i> scroll — the menu folds into the bar</div>
   </section>
 
   <section class="section">
@@ -56,7 +62,7 @@
 
 <footer class="foot" id="foot"></footer>
 
-<script src="assets/data.js"></script>
-<script src="assets/app.js"></script>
+<script src="assets/data.js?v=3"></script>
+<script src="assets/app.js?v=3"></script>
 </body>
 </html>
