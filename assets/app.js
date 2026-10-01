@@ -42,6 +42,34 @@
       <div class="br"><i>Brands</i><b>${s.brands.map(esc).join(' · ')}</b></div>
     </article>`;
 
+  /* cols: [{label, title, dir}]  rows: {lead, verb, on, dir, items:[{label}]}  links: [{a, b}] */
+  const DIRECT_ROW = 'Quality — direct';
+  const matrix = (cols, rows, links) => {
+    const anyDir = cols.some(c => c.dir);
+    return `
+    <div class="mtxwrap" data-fade>
+      <table class="mtx">
+        <thead><tr><th class="lead">${esc(rows.lead)}</th>${cols.map(c =>
+          `<th${c.dir ? ' class="dir"' : ''} title="${esc(c.title || c.label)}">${esc(c.label)}${c.dir ? ' ◆' : ''}</th>`).join('')}</tr></thead>
+        <tbody>
+          ${rows.items.map(r => `
+            <tr${r.label === DIRECT_ROW ? ' class="dir"' : ''}>
+              <th class="lead">${esc(r.label)}</th>
+              ${cols.map(c => {
+                const on = links.some(l => l.a === r.label && l.b === c.label);
+                return `<td title="${esc(on ? `${r.label} ${rows.verb} ${c.label}` : '')}"><i class="dot${on ? ' on' : ''}"></i></td>`;
+              }).join('')}
+            </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+    <div class="legend">
+      <span><i></i>${esc(rows.on)}</span>
+      ${rows.items.some(r => r.label === DIRECT_ROW) ? `<span><i class="dir"></i>${esc(DIRECT_ROW)}</span>` : ''}
+      ${anyDir ? '<span><i class="dir" style="border-radius:50%"></i>Column marked ◆ is supplied straight by Quality</span>' : ''}
+    </div>`;
+  };
+
   /* ---------------- shell ---------------- */
   $('#bar').innerHTML = `
     <div class="bar-in">
@@ -64,6 +92,12 @@
         <a href="mailto:${COMPANY.email}">${esc(COMPANY.email)}</a>
         <a href="${COMPANY.site}" target="_blank" rel="noopener">qualityegypt.com</a>
       </div>
+    </div>`;
+
+  /* cards / matrix switch */
+  const toggle = () => `<div class="viewtoggle">
+      <button class="on" data-set="cards">Cards</button>
+      <button data-set="matrix">Matrix</button>
     </div>`;
 
   /* ---------------- home ---------------- */
@@ -132,7 +166,35 @@
               [branch.no, 'branch no.']
             ].map(([n, l]) => `<div data-fade><b class="grad">${n}</b><span>${l}</span></div>`).join('')}
           </div>
-          <div class="grid g3">${branch.brands.map(brandCard).join('')}</div>
+
+          <div class="sechead" style="display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap">
+            <div>
+              <span class="eyebrow" data-fade>Brands</span>
+              <h2 data-fade>${esc(branch.title)} brands and their supplier</h2>
+            </div>
+            ${toggle()}
+          </div>
+
+          <div id="cards" data-view="cards">
+            <div class="grid g3">${branch.brands.map(brandCard).join('')}</div>
+          </div>
+
+          <div id="matrix" data-view="matrix" hidden>
+            ${matrix(
+              branch.brands.map(b => ({label: b.b, title: b.b, dir: !b.with.length})),
+              {
+                lead: 'Supplier', verb: 'supplies', on: 'Partner supplies this brand',
+                items: [
+                  ...[...new Set(branch.brands.flatMap(b => b.with))].sort().map(p => ({label: p})),
+                  {label: DIRECT_ROW}
+                ]
+              },
+              [
+                ...branch.brands.flatMap(b => b.with.map(w => ({a: w, b: b.b}))),
+                ...branch.brands.filter(b => !b.with.length).map(b => ({a: DIRECT_ROW, b: b.b}))
+              ]
+            )}
+          </div>
         </div>
       </section>
 
@@ -174,7 +236,32 @@
       </div>`;
 
     $('#body').innerHTML = `
-      <section class="section tight"><div class="wrap grid g3">${SUPPLY.map(supplyCard).join('')}</div></section>
+      <section class="section tight">
+        <div class="wrap">
+          <div class="sechead" style="display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap">
+            <div>
+              <span class="eyebrow" data-fade>All partners</span>
+              <h2 data-fade>Who supplies which branch</h2>
+            </div>
+            ${toggle()}
+          </div>
+
+          <div data-view="cards"><div class="grid g3">${SUPPLY.map(supplyCard).join('')}</div></div>
+
+          <div data-view="matrix" hidden>
+            ${matrix(
+              MINDMAP.map(m => ({label: m.title, title: m.title})),
+              {
+                lead: 'Partner', verb: 'supplies brands in', on: 'Partner supplies that branch',
+                items: SUPPLY.map(s => ({label: s.p}))
+              },
+              SUPPLY.flatMap(s => s.serves.flatMap(c =>
+                c.brands.filter(b => b.with.includes(s.p)).map(() => ({a: s.p, b: c.title}))))
+            )}
+          </div>
+        </div>
+      </section>
+
       <section class="section alt">
         <div class="wrap">
           <div class="sechead">
@@ -281,6 +368,16 @@
   };
   addEventListener('scroll', onScroll, {passive: true});
   onScroll();
+
+  /* ---------------- cards / matrix view ---------------- */
+  const panels = $$('[data-view]');
+  const setView = v => {
+    panels.forEach(p => { p.hidden = p.dataset.view !== v; });
+    $$('.viewtoggle button').forEach(b => b.classList.toggle('on', b.dataset.set === v));
+    try { history.replaceState(null, '', v === 'cards' ? location.pathname : '#' + v); } catch (e) { /* file:// */ }
+  };
+  $$('.viewtoggle button').forEach(b => b.addEventListener('click', () => setView(b.dataset.set)));
+  if (location.hash === '#matrix') setView('matrix');
 
   /* ---------------- reveal once ---------------- */
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) {

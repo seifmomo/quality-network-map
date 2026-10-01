@@ -210,6 +210,45 @@ body.bar-on .bar{transform:none;opacity:1}
 .sechead h2{font-size:clamp(1.5rem,3.2vw,2.2rem);margin:14px 0 6px}
 .sechead p{max-width:62ch;color:var(--muted)}
 
+/* ---------------- view toggle ---------------- */
+.viewtoggle{display:inline-flex;padding:4px;border-radius:999px;background:var(--paper);border:1px solid var(--line);gap:2px}
+.viewtoggle button{
+  border:0;background:transparent;cursor:pointer;font:inherit;font-size:.82rem;font-weight:650;
+  color:var(--muted);padding:8px 16px;border-radius:999px;transition:.24s var(--ease);
+}
+.viewtoggle button:hover{color:var(--ink)}
+.viewtoggle button.on{background:var(--white);color:var(--em);box-shadow:var(--shadow-s)}
+
+/* ---------------- matrix ---------------- */
+.mtxwrap{
+  overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:var(--white);box-shadow:var(--shadow-s);
+}
+.mtx{border-collapse:separate;border-spacing:0;width:100%;min-width:600px;font-size:.86rem}
+.mtx th,.mtx td{padding:12px 14px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap}
+.mtx thead th{
+  position:sticky;top:0;z-index:2;background:var(--paper);font-weight:700;font-size:.76rem;
+  letter-spacing:.04em;color:var(--ink-2);text-transform:uppercase;
+}
+.mtx tbody tr:last-child th,.mtx tbody tr:last-child td{border-bottom:0}
+.mtx th.lead{
+  position:sticky;left:0;z-index:1;background:var(--white);text-align:left;font-weight:650;
+  box-shadow:1px 0 0 var(--line);
+}
+.mtx thead th.lead{z-index:3;background:var(--paper);box-shadow:1px 0 0 var(--line)}
+.mtx tbody tr:hover td,.mtx tbody tr:hover th.lead{background:var(--em-soft)}
+.mtx td .dot{
+  display:inline-block;width:11px;height:11px;border-radius:50%;
+  background:var(--paper-2);box-shadow:inset 0 0 0 1px var(--line);
+}
+.mtx td .dot.on{background:linear-gradient(140deg,var(--em),var(--em-mid));box-shadow:0 0 0 3px var(--em-soft)}
+.mtx tr.dir th.lead{color:var(--warm)}
+.mtx thead th.dir{color:var(--warm);background:var(--warm-soft)}
+.mtx tr.dir td .dot.on{background:var(--warm);box-shadow:0 0 0 3px var(--warm-soft);border-radius:3px}
+.legend{display:flex;flex-wrap:wrap;gap:18px;margin-top:14px;font-size:.78rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.legend i{width:11px;height:11px;border-radius:50%;background:linear-gradient(140deg,var(--em),var(--em-mid))}
+.legend i.dir{background:var(--warm);border-radius:3px}
+
 /* ---------------- grids ---------------- */
 .grid{display:grid;gap:14px}
 .g2{grid-template-columns:repeat(2,1fr)}

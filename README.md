@@ -15,7 +15,7 @@ has been scrolled past.
 
 | Tab | Page | Contents |
 | --- | --- | --- |
-| Home | `index.html` | Logo hero, section tree, at-a-glance strip, full map overview, brand wall |
+| Home | `index.html` | Logo hero, section list, at-a-glance strip, full map overview, brand wall |
 | Active / WiFi | `active.html` | Huawei, Cisco, Aruba, D-Link, TP-Link |
 | Industrial SW | `industrial.html` | Planet, Antaira, TrendNet, Huawei iMaster |
 | Passive | `passive.html` | Legrand, Leviton, Panduit, Datwyler, CommScope, Pro Link, Black Stone, El Sweedy, Premium Line |
@@ -25,6 +25,20 @@ has been scrolled past.
 | Contact | `contact.html` | Phone, email, address, website, enquiry form |
 
 **5 branches · 27 brand entries · 18 supply partners · 4 direct-supply brands**
+
+---
+
+## Two ways to read each section
+
+Every branch tab (and the Supply partners tab) has a **Cards ⇄ Matrix** switch in the header.
+
+- **Cards** — one card per brand: its supply partner chips, or a *direct supply* marker.
+- **Matrix** — brands as columns, suppliers as rows, a green dot on every linked cell, so the
+  shape of the supply network is visible at a glance. Columns marked `◆` are supplied straight by
+  Quality, and a **Quality — direct** row collects them at the bottom.
+
+The state is shareable: `active.html#matrix` opens that tab straight into the matrix.
+Hovering a row highlights the whole line.
 
 ---
 
@@ -52,7 +66,7 @@ rack.html   phone.html   supply.html      contact.html
 assets/data.js             content — the single source of truth
 assets/app.js              rendering, bar, hero tree, reveals, form
 assets/style.css           design system
-assets/icon.svg            tab icon (green tile + Quality swoosh)
+assets/icon.svg            tab icon — Quality swoosh on white
 assets/apple-touch-icon.png
 img/quality-logo.png       Quality logo (dark, for the white UI)
 img/brand-wall.jpg
