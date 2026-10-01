@@ -80,12 +80,11 @@ p{margin:0}
 }
 body.bar-on .bar{transform:none;opacity:1}
 .bar.stuck{border-color:var(--line);box-shadow:0 10px 30px -24px rgba(11,21,18,.5)}
-.bar-in{display:flex;align-items:center;gap:14px;width:min(var(--w),92vw);margin-inline:auto}
+.bar-in{display:flex;align-items:center;gap:14px;width:100%;padding-inline:clamp(16px,4vw,48px)}
 .bar .logo{height:24px;width:auto}
-.bar .brand{font-size:.74rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
 .bar nav{margin-left:auto;display:flex;align-items:center;gap:1px}
 .bar nav a{
-  position:relative;padding:8px 11px;border-radius:10px;font-size:.87rem;font-weight:550;color:var(--muted);
+  position:relative;padding:8px 9px;border-radius:10px;font-size:.87rem;font-weight:550;color:var(--muted);
   transition:color .2s,background .2s;
 }
 .bar nav a:hover{color:var(--ink);background:var(--paper)}
@@ -135,6 +134,16 @@ body.bar-on .bar{transform:none;opacity:1}
 .mob a i{font-style:normal;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 .mob a.on{color:var(--em)}
 @keyframes dropIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+
+@media (max-width:1400px){
+  .bar .logo{height:20px}
+  .bar nav a{padding:7px 8px;font-size:.84rem}
+  .bsearch input{width:118px}
+}
+
+@media (max-width:1300px){
+  .bar .tel{display:none}
+}
 
 @media (max-width:1080px){
   .bar nav{display:none}

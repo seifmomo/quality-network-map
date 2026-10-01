@@ -113,7 +113,6 @@
   $('#bar').innerHTML = `
     <div class="bar-in">
       <a href="index.html" aria-label="Quality Network home"><img class="logo" src="img/quality-logo.png" alt="Quality"></a>
-      <span class="brand">Network / Data</span>
       <nav>${TABS.filter(t => t.id !== 'home')
         .map(t => `<a href="${t.file}"${t.id === PAGE ? ' class="on"' : ''}>${esc(t.label)}</a>`).join('')}</nav>
       <label class="bsearch">
