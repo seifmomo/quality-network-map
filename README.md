@@ -10,8 +10,8 @@
 
 A clean white-canvas site for the **Quality Network / Data** division.
 Every section is its own tab (page). The home hero is deliberately plain: the Quality logo,
-one line, and a **list of the seven sections** — then the top bar slides in only once the hero
-has been scrolled past.
+a line that rotates, a **search field**, three quick chips, and a **list of the seven sections** —
+then the top bar slides in only once the hero has been scrolled past.
 
 | Tab | Page | Contents |
 | --- | --- | --- |
@@ -45,15 +45,44 @@ Hovering a row highlights the whole line.
 ## The home hero
 
 1. The **Quality logo** sits centred at the top (`img/quality-logo.png`).
-2. One line of text, then a **clean list of the seven sections** — number, name, count and the
-   brands inside, each row a full-width link that slides slightly and grows a green edge on hover.
-3. The whole hero fits one screen (≈750 px tall), with no headings, stats or clutter.
-4. The **top bar stays hidden while the hero is on screen** and slides down only after the hero
+2. A **rotating one-liner** (27 entries · 18 partners · 5 branches · 4 direct) that pauses on
+   hover and stays static under `prefers-reduced-motion`.
+3. A **search field** — `Search 25 brands, 18 partners…` — then three **quick chips**:
+   *Who supplies Huawei?* · *Single-source risks* · *Direct brands*.
+4. A **clean list of the seven sections** — number, name, count and the brands inside, each row a
+   full-width link that slides slightly and grows a green edge on hover. Typing in the search
+   **filters these rows live**.
+5. The whole hero fits one screen (≈820 px tall), with no headings or clutter.
+6. The **top bar stays hidden while the hero is on screen** and slides down only after the hero
    has been fully scrolled past, so navigation never interrupts the first view. Scrolling back up
    hides it again.
 
-Straight after the hero comes the map itself — all 27 brand entries in five branch columns — and a
-**partners band** listing all 18 supply partners with a link into the Supply partners tab.
+Straight after the hero comes a one-line **insight sentence**, the map itself — all 27 brand
+entries in five branch columns — and a **partners band** listing all 18 supply partners with a
+link into the Supply partners tab.
+
+## Search & click-to-answer
+
+- **Search** sits in the top bar on every page (and the hero on home). Press `/` to focus it,
+  `Esc` to clear. Results are grouped **Branches / Brands / Partners** — searching `Huawei` finds
+  the brand *and* the four partners that supply it; `Universe` finds the partner and its four
+  brands.
+- On a branch or partner tab the search also **filters the visible cards** and shows an
+  `n of m shown` counter with a Clear button.
+- **Click any supply-partner chip** on a brand card to spotlight that partner's brands.
+- Brands that span branches — **Huawei** and **Black Stone** — carry an **“Also in …”** link.
+- Landing on `active.html#focus=Huawei` (or any `#focus=` brand/partner) highlights and scrolls
+  to that card.
+
+## Insights
+
+Computed live from `data.js`, so they cannot drift from the map:
+
+- Home carries a single sentence — `27 brand entries across 5 branches, supplied by 18 partners —
+  4 brands bought directly from Quality.`
+- **Supply partners** tab ends with **Single-source risk** (brands with only one distributor) and
+  **Partner coverage** (which branches each partner serves).
+
 
 ## Credit
 
@@ -73,14 +102,23 @@ tab.
 index.html  active.html  industrial.html  passive.html
 rack.html   phone.html   supply.html      contact.html
 assets/data.js             content — the single source of truth
-assets/app.js              rendering, bar, hero tree, reveals, form
+assets/app.js              rendering, bar, hero, search, insights, reveals, form
 assets/style.css           design system
 assets/icon.svg            tab icon — Quality swoosh on white
 assets/apple-touch-icon.png
 img/quality-logo.png       Quality logo (dark, for the white UI)
 img/brand-wall.jpg
-img/preview.png
+img/preview.png            home preview for this README
+img/og.png                 1200×630 social share card
+robots.txt  sitemap.xml    crawler + indexing
 ```
+
+## Share & SEO
+
+Each page carries a canonical URL, `theme-color`, Open Graph and Twitter-card tags pointing at
+`img/og.png`, so links preview cleanly in WhatsApp and LinkedIn. The home page also embeds
+JSON-LD (`Organization` + `WebSite`).
+
 
 ## Design
 

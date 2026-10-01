@@ -14,6 +14,44 @@
   const BIG   = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>';
   const PHONE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg>';
 
+  /* ---------------- search index (built from data.js) ---------------- */
+  const TOTAL = MINDMAP.reduce((n, m) => n + m.brands.length, 0);
+
+  const searchData = (() => {
+    const brands = new Map();
+    MINDMAP.forEach(m => m.brands.forEach(b => {
+      if (!brands.has(b.b)) brands.set(b.b, {name: b.b, branches: [], partners: new Set()});
+      const e = brands.get(b.b);
+      if (!e.branches.some(x => x.id === m.id)) e.branches.push({id: m.id, title: m.title});
+      b.with.forEach(w => e.partners.add(w));
+    }));
+    return {
+      brands: [...brands.values()].map(e => ({...e, partners: [...e.partners].sort()})),
+      partners: SUPPLY.map(s => ({name: s.p, brands: s.brands.slice(), branches: s.serves.map(c => c.title)})),
+      branches: MINDMAP.map(m => ({name: m.title, id: m.id, no: m.no, count: m.brands.length}))
+    };
+  })();
+
+  const search = q => {
+    const t = q.trim().toLowerCase();
+    if (!t) return null;
+    const has = s => String(s).toLowerCase().includes(t);
+    return {
+      branches: searchData.branches.filter(x => has(x.name) || has(x.no)).slice(0, 6),
+      brands:   searchData.brands.filter(x => has(x.name) || x.partners.some(has) || x.branches.some(b => has(b.title))).slice(0, 8),
+      partners: searchData.partners.filter(x => has(x.name) || x.brands.some(has) || x.branches.some(has)).slice(0, 8)
+    };
+  };
+
+  const alsoIn = name => {
+    const e = searchData.brands.find(x => x.name === name);
+    if (!e) return '';
+    const others = e.branches.filter(b => b.id !== PAGE);
+    if (!others.length) return '';
+    return `<div class="also">Also in ${others.map(o =>
+      `<a href="${file(o.id)}#focus=${encodeURIComponent(name)}">${esc(o.title)}</a>`).join(', ')}</div>`;
+  };
+
   /* ---------------- brand mark ---------------- */
   const markFor = brand => {
     const si = LOGO[brand.toLowerCase()];
@@ -22,21 +60,22 @@
       : `<span class="mark">${esc(brand.slice(0, 2).toUpperCase())}</span>`;
   };
   const withChips = list => list.length
-    ? `<div class="chips">${list.map(w => `<span class="chip">${esc(w)}</span>`).join('')}</div>`
+    ? `<div class="chips">${list.map(w => `<button type="button" class="chip act" data-partner="${esc(w)}">${esc(w)}</button>`).join('')}</div>`
     : `<div class="chips"><span class="chip none">Direct supply — no distributor</span></div>`;
 
   const brandCard = b => `
-    <article class="bcard" data-fade>
+    <article class="bcard" data-name="${esc(b.b)}" data-hay="${esc(b.b + ' ' + b.with.join(' '))}" data-fade>
       <div class="top">${markFor(b.b)}<div><h3>${esc(b.b)}</h3><div class="wl">brand</div></div></div>
       ${withChips(b.with)}
       <div class="link">
         ${b.with.length ? `<span>Supplied by <b>${b.with.length}</b> partner${b.with.length > 1 ? 's' : ''}</span>`
                         : `<span>Supplied <b>directly</b> by Quality</span>`}
       </div>
+      ${alsoIn(b.b)}
     </article>`;
 
   const supplyCard = s => `
-    <article class="scard" data-fade>
+    <article class="scard" data-name="${esc(s.p)}" data-hay="${esc(s.p + ' ' + s.brands.join(' ') + ' ' + s.serves.map(c => c.title).join(' '))}" data-fade>
       <h3>${esc(s.p)}</h3>
       <div class="srv">${s.serves.map(c => `<a href="${file(c.id)}">${esc(c.title)}</a>`).join('')}</div>
       <div class="br"><i>Brands</i><b>${s.brands.map(esc).join(' · ')}</b></div>
@@ -77,6 +116,10 @@
       <span class="brand">Network / Data</span>
       <nav>${TABS.filter(t => t.id !== 'home')
         .map(t => `<a href="${t.file}"${t.id === PAGE ? ' class="on"' : ''}>${esc(t.label)}</a>`).join('')}</nav>
+      <label class="bsearch">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="barq" type="search" autocomplete="off" placeholder="Search" aria-label="Search brands and partners">
+      </label>
       <a class="tel" href="tel:${COMPANY.tel}">${PHONE}${esc(COMPANY.phone)}</a>
       <button class="burger" aria-label="Menu" aria-expanded="false"><i></i><i></i><i></i></button>
     </div>`;
@@ -106,6 +149,64 @@
       </span>
     </div>`;
 
+  /* ---------------- search UI ---------------- */
+  const SRES = document.createElement('div');
+  SRES.className = 'sres';
+  SRES.hidden = true;
+  document.body.appendChild(SRES);
+
+  let activeInput = null;
+  const closeRes = () => { SRES.hidden = true; SRES.innerHTML = ''; activeInput = null; };
+
+  const srow = (href, kind, title, meta) =>
+    `<a class="srow" href="${href}"><span class="sk">${kind}</span><b>${title}</b><span class="sm">${meta}</span></a>`;
+
+  const renderResults = (q, input) => {
+    const r = search(q);
+    if (!r) { closeRes(); return; }
+    const out = [];
+    if (r.branches.length) out.push('<div class="sgrp">Branches</div>' + r.branches.map(x =>
+      srow(file(x.id), esc(x.no), esc(x.name), `${x.count} brands`)).join(''));
+    if (r.brands.length) out.push('<div class="sgrp">Brands</div>' + r.brands.map(x =>
+      srow(file(x.branches[0].id) + '#focus=' + encodeURIComponent(x.name), 'brand', esc(x.name),
+        (x.partners.length ? esc(x.partners.join(' · ')) : 'direct supply') + ' · ' + x.branches.map(b => esc(b.title)).join(', '))).join(''));
+    if (r.partners.length) out.push('<div class="sgrp">Partners</div>' + r.partners.map(x =>
+      srow('supply.html#focus=' + encodeURIComponent(x.name), 'partner', esc(x.name),
+        `${x.brands.length} brands · ${x.branches.map(esc).join(', ')}`)).join(''));
+    if (!out.length) out.push(`<div class="snone">No match for “${esc(q)}”.</div>`);
+    SRES.innerHTML = out.join('');
+    SRES.hidden = false;
+    const box = input.getBoundingClientRect();
+    SRES.style.top = (box.bottom + 8) + 'px';
+    SRES.style.left = Math.max(12, Math.min(box.left, innerWidth - Math.max(box.width, 340) - 12)) + 'px';
+    SRES.style.width = Math.max(box.width, 340) + 'px';
+    activeInput = input;
+  };
+
+  const initSearch = (input, onChange) => {
+    if (!input) return;
+    input.addEventListener('input', () => { renderResults(input.value, input); onChange && onChange(input.value); });
+    input.addEventListener('focus', () => { if (input.value.trim()) renderResults(input.value, input); });
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { input.value = ''; closeRes(); onChange && onChange(''); input.blur(); }
+      if (e.key === 'ArrowDown') { const a = $('.srow', SRES); if (a) { e.preventDefault(); a.focus(); } }
+      if (e.key === 'Enter') { const a = $('.srow', SRES); if (a) { e.preventDefault(); location.href = a.getAttribute('href'); } }
+    });
+  };
+
+  SRES.addEventListener('click', e => { if (e.target.closest('.srow')) closeRes(); });
+  addEventListener('scroll', () => { if (!SRES.hidden) closeRes(); }, {passive: true});
+  addEventListener('resize', () => { if (!SRES.hidden) closeRes(); }, {passive: true});
+  document.addEventListener('click', e => {
+    if (activeInput && !SRES.contains(e.target) && e.target !== activeInput) closeRes();
+  });
+  addEventListener('keydown', e => {
+    if (e.key === '/' && !/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) {
+      const i = $('#heroq') || $('#barq');
+      if (i) { e.preventDefault(); i.focus(); }
+    }
+  });
+
   /* cards / matrix switch */
   const toggle = () => `<div class="viewtoggle">
       <button class="on" data-set="cards">Cards</button>
@@ -127,12 +228,16 @@
     ];
 
     $('#nodes').innerHTML = rows.map((r, i) => `
-      <a class="row" href="${r.href}" data-fade style="transition-delay:${120 + i * 55}ms">
+      <a class="row" href="${r.href}" data-hay="${esc(r.title + ' ' + r.tags)}" data-fade style="transition-delay:${120 + i * 55}ms">
         <span class="ix">${r.ix}</span>
         <span class="nm"><b>${esc(r.title)}</b><i>${esc(r.n)}</i></span>
         <span class="tags">${esc(r.tags)}</span>
         <span class="arw">${ARROW}</span>
       </a>`).join('');
+
+    const insight = $('#insight');
+    if (insight) insight.textContent =
+      `${TOTAL} brand entries across ${MINDMAP.length} branches, supplied by ${SUPPLY.length} partners — ${DIRECT.length} brands bought directly from Quality.`;
 
     $('#bandcount').textContent = `${SUPPLY.length} partners behind the five branches`;
     $('#bandchips').innerHTML = SUPPLY.map(s => `<span class="chip">${esc(s.p)}</span>`).join('');
@@ -182,6 +287,8 @@
             </div>
             ${toggle()}
           </div>
+
+          <div class="filterbar" id="filterbar" hidden></div>
 
           <div id="cards" data-view="cards">
             <div class="grid g3">${branch.brands.map(brandCard).join('')}</div>
@@ -254,7 +361,9 @@
             ${toggle()}
           </div>
 
-          <div data-view="cards"><div class="grid g3">${SUPPLY.map(supplyCard).join('')}</div></div>
+          <div class="filterbar" id="filterbar" hidden></div>
+
+          <div id="pcards" data-view="cards"><div class="grid g3">${SUPPLY.map(supplyCard).join('')}</div></div>
 
           <div data-view="matrix" hidden>
             ${matrix(
@@ -270,7 +379,7 @@
         </div>
       </section>
 
-      <section class="section alt">
+      <section class="section alt" id="direct">
         <div class="wrap">
           <div class="sechead">
             <span class="eyebrow" data-fade>Direct supply</span>
@@ -278,6 +387,24 @@
             <p data-fade>No distributor in between — straight from Quality to the project.</p>
           </div>
           <div class="chips" data-fade>${DIRECT.map(d => `<span class="chip">${esc(d)}</span>`).join('')}</div>
+        </div>
+      </section>
+
+      <section class="section" id="insights">
+        <div class="wrap">
+          <span class="eyebrow" data-fade>Insights</span>
+          <h2 data-fade style="margin-top:14px">Where the supply chain is exposed</h2>
+          <p class="muted" data-fade style="max-width:62ch;margin-top:10px">Brands with a single distributor depend on that one partner. Worth a second source, or a buffer stock.</p>
+          <div class="sslist" data-fade>${(() => {
+            const single = MINDMAP.flatMap(m => m.brands.map(b => ({...b, branch: m.title})))
+              .filter(b => b.with.length === 1);
+            return single.map(b => `<div class="ssitem"><b>${esc(b.b)}</b><span>only ${esc(b.with[0])} · ${esc(b.branch)}</span></div>`).join('')
+              || '<div class="ssitem"><b>None</b><span>every brand has more than one route</span></div>';
+          })()}</div>
+
+          <h2 data-fade style="margin-top:46px;font-size:clamp(1.3rem,2.6vw,1.8rem)">Partner coverage</h2>
+          <div class="cov" data-fade>${SUPPLY.slice().sort((a, b) => b.serves.length - a.serves.length).map(s => `
+            <div class="cov-row"><b>${esc(s.p)}</b><span>${esc(s.serves.map(c => c.title).join(' · '))} — ${s.brands.length} brand${s.brands.length > 1 ? 's' : ''}</span></div>`).join('')}</div>
         </div>
       </section>`;
   }
@@ -386,6 +513,87 @@
   };
   $$('.viewtoggle button').forEach(b => b.addEventListener('click', () => setView(b.dataset.set)));
   if (location.hash === '#matrix') setView('matrix');
+
+  /* ---------------- search + filter wiring ---------------- */
+  const heroq = $('#heroq'), barq = $('#barq');
+  const target = PAGE === 'home' ? $('#nodes') : (branch ? $('#cards') : (PAGE === 'supply' ? $('#pcards') : null));
+  const cardSel = PAGE === 'home' ? '.row' : (branch ? '.bcard' : '.scard');
+  const label = PAGE === 'home' ? 'sections' : (branch ? 'brands' : 'partners');
+  const filterbar = $('#filterbar');
+
+  const applyFilter = q => {
+    if (!target) return;
+    const t = q.trim().toLowerCase();
+    const items = $$(cardSel, target);
+    items.forEach(c => {
+      c.hidden = !!t && !(c.dataset.hay || '').toLowerCase().includes(t);
+      if (!c.hidden) c.classList.add('in');
+    });
+    if (!filterbar) return;
+    const n = items.filter(c => !c.hidden).length;
+    filterbar.hidden = !t;
+    if (t) filterbar.innerHTML = `<span><b>${n}</b> of ${items.length} ${label} shown</span><button type="button" class="fclear">Clear</button>`;
+  };
+
+  if (filterbar) filterbar.addEventListener('click', e => {
+    if (e.target.closest('.fclear')) {
+      [heroq, barq].forEach(i => { if (i) i.value = ''; });
+      applyFilter(''); closeRes();
+    }
+  });
+
+  initSearch(barq, applyFilter);
+  initSearch(heroq, applyFilter);
+  if (heroq) heroq.placeholder = `Search ${searchData.brands.length} brands, ${searchData.partners.length} partners…`;
+
+  /* hero quick chips */
+  $$('.chip.q').forEach(btn => btn.addEventListener('click', () => {
+    if (btn.dataset.go) { location.href = btn.dataset.go; return; }
+    const q = btn.dataset.q || '';
+    const input = heroq || barq;
+    if (input) { input.value = q; input.focus(); renderResults(q, input); applyFilter(q); }
+  }));
+
+  /* click a partner chip → spotlight that partner's brands */
+  document.addEventListener('click', e => {
+    const chip = e.target.closest('.chip.act');
+    if (!chip) return;
+    const q = chip.dataset.partner || '';
+    const input = heroq || barq;
+    if (input) { input.value = q; applyFilter(q); }
+    if (target) target.scrollIntoView({behavior: 'smooth', block: 'start'});
+    if (barq && PAGE !== 'home') { barq.focus(); renderResults(q, barq); }
+    else if (input) renderResults(q, input);
+  });
+
+  /* rotating hero line */
+  const hl = $('#heroline');
+  if (hl && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const phrases = [
+      hl.textContent.trim(),
+      `${TOTAL} brand entries across ${MINDMAP.length} branches`,
+      `${SUPPLY.length} supply partners behind the brands`,
+      `${DIRECT.length} brands supplied directly by Quality`
+    ];
+    let k = 0;
+    setInterval(() => {
+      k = (k + 1) % phrases.length;
+      hl.classList.add('swap');
+      setTimeout(() => { hl.textContent = phrases[k]; hl.classList.remove('swap'); }, 260);
+    }, 3600);
+  }
+
+  /* #focus= highlights a brand / partner card */
+  const fm = location.hash.match(/^#focus=(.+)$/);
+  if (fm) {
+    const name = decodeURIComponent(fm[1]);
+    const el = $$('.bcard,.scard').find(c => c.dataset.name === name);
+    if (el) {
+      el.hidden = false;
+      el.classList.add('in', 'flash');
+      setTimeout(() => el.scrollIntoView({behavior: 'smooth', block: 'center'}), 160);
+    }
+  }
 
   /* ---------------- reveal once ---------------- */
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
