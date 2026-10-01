@@ -1,9 +1,15 @@
 # Quality Network — Network / Data
 
+[![Live site](https://img.shields.io/badge/live%20site-seifmomo.github.io-206242?style=flat-square)](https://seifmomo.github.io/quality-network-map/)
+[![Repo](https://img.shields.io/badge/repo-seifmomo%2Fquality--network--map-2f9e6b?style=flat-square)](https://github.com/seifmomo/quality-network-map)
+[![License](https://img.shields.io/badge/license-%C2%A9%20Quality-ff6900?style=flat-square)](#licence)
+
+### ➜ **Open the live page: https://seifmomo.github.io/quality-network-map/**
+
 A single, print-styled page that shows the **whole Quality Network mind map at once** —
 nothing hidden behind slides, tabs or clicks.
 
-Live: **https://seifmomo.github.io/quality-network-map/**
+![Preview of the Quality Network page](img/preview.png)
 
 ---
 
