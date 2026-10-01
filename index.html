@@ -1,108 +1,62 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Quality Network — Network / Data | Brands and supply partners</title>
-<meta name="description" content="The complete Quality Network range: Active / WiFi, Industrial SW, Passive, Rack and IP Telephone brands, each with the distributor or supply partner behind it.">
-<meta name="author" content="Egyptian Engineering Projects Co. (Quality)">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quality — Network / Data</title>
+<meta name="description" content="Quality Network / Data: active and WiFi, industrial software, passive, rack and IP telephony — every brand and its supply partner.">
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<meta property="og:title" content="Quality Network — Network / Data">
-<meta property="og:description" content="Every brand we supply under Quality Network, and the supply partner behind each one.">
-<meta property="og:image" content="img/brand-wall.jpg">
-<meta property="og:type" content="website">
 <link rel="stylesheet" href="assets/style.css">
 </head>
-<body>
+<body data-page="home">
 
-<header class="bar">
-  <div class="wrap bar-in">
-    <img class="logo" src="https://qualityegypt.com/wp-content/uploads/2022/09/QLogoW.png" alt="Quality">
-    <span class="brand-name">Network / Data</span>
-    <nav>
-      <a href="#active">Active / WiFi</a>
-      <a href="#industrial">Industrial SW</a>
-      <a href="#passive">Passive</a>
-      <a href="#rack">Rack</a>
-      <a href="#phone">IP Telephone</a>
-      <a href="#supply">Supply partners</a>
-      <a href="#contact">Contact</a>
-    </nav>
-    <a class="tel" href="tel:+20222602665">(+202) 22602665</a>
-  </div>
-</header>
+<div class="prog" id="prog"></div>
+<header class="bar" id="bar"></header>
+<div class="mob" id="mob"></div>
 
 <main>
-  <section class="head">
+  <section class="hero">
+    <div class="hero-top wrap">
+      <span class="eyebrow">Quality Egyptian Engineering Projects</span>
+      <h1>Network <span class="grad">/ Data</span></h1>
+      <p class="sub">Every brand in the Quality Network / Data division, the branch it belongs to, and the supply partner behind it. Pick a section to open its own tab — the menu folds away as soon as you scroll.</p>
+      <div class="hero-pill"><span class="d"></span> Cairo, Egypt · <b id="hphone">(+202) 22602665</b></div>
+    </div>
+
+    <nav class="mega" id="mega" aria-label="Sections"></nav>
+
+    <div class="cue"><i></i> scroll to collapse</div>
+  </section>
+
+  <section class="section">
     <div class="wrap">
-      <span class="eyebrow" data-fade>Quality Network</span>
-      <h1 data-fade style="transition-delay:60ms">Every brand we supply, and the partner behind it.</h1>
-      <div class="path" data-fade style="transition-delay:110ms">
-        <span class="node root">Quality</span>
-        <span aria-hidden="true">&rarr;</span>
-        <span class="node">Network / Data</span>
-      </div>
-      <p class="lead" data-fade style="transition-delay:160ms">The full Network / Data range in one place — five branches, every brand, and the distributor or supply partner each brand is supplied through. Nothing is hidden behind a click.</p>
-      <div class="legend" data-fade style="transition-delay:210ms">
-        <span class="legend-key"><i class="dot"></i> supply partner for the brand above it</span>
-        <span><b>Direct supply</b> — we buy and support the brand ourselves</span>
-      </div>
+      <span class="eyebrow" data-fade>At a glance</span>
+      <div class="strip" id="strip" style="margin-top:18px"></div>
     </div>
   </section>
 
-  <section class="map">
+  <section class="section alt">
     <div class="wrap">
-      <div class="tree">
-        <div class="stem"></div>
-        <div class="branches" id="branches"></div>
-      </div>
+      <span class="eyebrow" data-fade>The whole map</span>
+      <h2 style="font-size:clamp(1.6rem,3.4vw,2.4rem);margin:14px 0 6px" data-fade>Quality → Network / Data</h2>
+      <p class="muted" style="max-width:64ch;margin-bottom:24px" data-fade>All 27 brand entries in one view. Open a column's tab for the full page with brand cards and supply chain.</p>
+      <div class="ov" id="ov"></div>
     </div>
   </section>
 
-  <section class="supply" id="supply">
+  <section class="section">
     <div class="wrap">
-      <span class="eyebrow" data-fade>Supply network</span>
-      <h2 data-fade style="transition-delay:60ms">Supply partners, and where each one is used</h2>
-      <p class="lead" data-fade style="transition-delay:110ms">Procurement, warranty and spare parts run through these partners.</p>
-      <div class="sup-table" id="supTable" data-fade style="transition-delay:160ms"></div>
-    </div>
-  </section>
-
-  <section class="wall">
-    <div class="wrap">
-      <span class="eyebrow" data-fade>The wall</span>
-      <h2 data-fade style="transition-delay:60ms">The same range on our network wall</h2>
-      <figure data-fade style="transition-delay:110ms">
-        <img src="img/brand-wall.jpg" alt="Quality Network brand wall" onerror="this.closest('figure').classList.add('no-img')">
-        <figcaption>Quality Network brand wall — the mind map is how the wall, the pricing and the warranty partners stay aligned.</figcaption>
+      <figure class="shot" data-fade>
+        <img src="img/brand-wall.jpg" alt="Quality Network brand wall" loading="lazy">
+        <figcaption>Quality Network / Data — Cairo</figcaption>
       </figure>
-    </div>
-  </section>
-
-  <section class="contact" id="contact">
-    <div class="wrap">
-      <span class="eyebrow" data-fade>Contact</span>
-      <h2 data-fade style="transition-delay:60ms">Quality Network enquiries</h2>
-      <dl class="contact-grid" data-fade style="transition-delay:110ms">
-        <div><dt>Company</dt><dd>Egyptian Engineering Projects Co.</dd></div>
-        <div><dt>Division</dt><dd>Quality Network — Network / Data</dd></div>
-        <div><dt>Telephone</dt><dd><a href="tel:+20222602665">(+202) 22602665</a></dd></div>
-        <div><dt>Email</dt><dd><a href="mailto:quality@qualityegypt.com">quality@qualityegypt.com</a></dd></div>
-        <div><dt>Address</dt><dd>13 El Obour Buildings, Salah Salem St., Cairo, Egypt</dd></div>
-        <div><dt>Website</dt><dd><a href="https://qualityegypt.com/" target="_blank" rel="noopener">qualityegypt.com</a></dd></div>
-      </dl>
     </div>
   </section>
 </main>
 
-<footer class="foot">
-  <div class="wrap">
-    <span>&copy; <span id="yr"></span> Egyptian Engineering Projects Co. — Quality. All rights reserved.</span>
-    <span>Brand names and logos are trademarks of their respective owners.</span>
-  </div>
-</footer>
+<footer class="foot" id="foot"></footer>
 
 <script src="assets/data.js"></script>
-<script src="assets/site.js"></script>
+<script src="assets/app.js"></script>
 </body>
 </html>
