@@ -10,6 +10,8 @@ A modern dark site for the **Quality Network / Data** division. Every section li
 tab (page), and the home hero carries a large centred selector menu that folds away into a slim
 top bar as soon as you scroll.
 
+![Quality Network / Data — home tab](img/preview.png)
+
 | Tab | Page | Contents |
 | --- | --- | --- |
 | Home | `index.html` | Centred section menu, at-a-glance strip, full map overview, brand wall |
