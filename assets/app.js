@@ -375,7 +375,6 @@
         </div>
         <div class="pmfoot">
           <span>Scope as recorded in the Quality network map.</span>
-          <a href="${p.creditUrl}" target="_blank" rel="noopener">Photo: ${esc(p.credit)}</a>
         </div>
       </div>`;
     if (typeof PMODAL.showModal === 'function' && !PMODAL.open) PMODAL.showModal();
@@ -545,7 +544,7 @@
               ${PROJECT_HUBS.map(groupFor).join('')}
             </div>
           </div>
-          <p class="pj-note" data-fade>Scope is as recorded in the Quality network map. Photographs show the projects or their public settings; images marked <b>illustrative</b> stand in where no public photograph of the site exists. Credits are listed inside each project.</p>
+          <p class="pj-note" data-fade>Scope is as recorded in the Quality network map. Photographs show the projects or their public settings; images marked <b>illustrative</b> stand in where no public photograph of the site exists.</p>
         </div>
       </section>
 

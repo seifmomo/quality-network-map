@@ -71,7 +71,7 @@ modal for each. It closes with the four delivery layers, a bench of the **11 bra
 those sites, the footprint and a contact call-to-action.
 
 Project photography lives in `img/projects/`; brand logos are local files in `img/brands/`, so the
-page has no runtime logo-CDN dependency. Each project modal carries its photo credit and scope.
+page has no runtime logo-CDN dependency.
 
 ## Search & click-to-answer
 
@@ -150,8 +150,8 @@ supplied (`Grand Steem`, `El Con Novd`, `Intepris / E-Kit`); `Brand-Connection` 
 `Brand Connection` and `Silicon21 + Middle East` split into `Silicon 21` and `Middle East`.
 
 The Landmark Projects section combines the site names and network scope from the infrastructure
-projects mind map with public project information and photography. Photo credits and source links
-are shown inside each project modal; illustrative images are labelled in the index note.
+projects mind map with public project information and photography; illustrative images are labelled
+in the index note.
 
 ## Licence
 
