@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 330 64" role="img" aria-label="Black Stone">
+  <g fill="#232A27">
+    <path d="M6 13h26l6 8H12l-6-8Z"/>
+    <path d="M6 29h26l6 8H12l-6-8Z" opacity=".82"/>
+    <path d="M6 45h26l6 8H12l-6-8Z" opacity=".64"/>
+    <text x="52" y="42" font-family="Segoe UI, Arial, Helvetica, sans-serif" font-size="30" font-weight="800" letter-spacing="1.2">BLACK STONE</text>
+  </g>
+</svg>

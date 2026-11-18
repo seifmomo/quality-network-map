@@ -7,6 +7,7 @@
   const $  = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => [...r.querySelectorAll(s)];
   const PAGE = document.body.dataset.page || 'home';
+  let projectHub = 'all';
   const esc  = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const file = id => id + '.html';
 
@@ -28,7 +29,11 @@
     return {
       brands: [...brands.values()].map(e => ({...e, partners: [...e.partners].sort()})),
       partners: SUPPLY.map(s => ({name: s.p, brands: s.brands.slice(), branches: s.serves.map(c => c.title)})),
-      branches: MINDMAP.map(m => ({name: m.title, id: m.id, no: m.no, count: m.brands.length}))
+      branches: MINDMAP.map(m => ({name: m.title, id: m.id, no: m.no, count: m.brands.length})),
+      projects: PROJECTS.map(p => ({
+        name: p.name, id: p.id, hub: PROJECT_HUBS.find(h => h.id === p.hub).name,
+        place: p.place, brands: p.brands.slice(), scope: p.scope.slice()
+      }))
     };
   })();
 
@@ -37,6 +42,7 @@
     if (!t) return null;
     const has = s => String(s).toLowerCase().includes(t);
     return {
+      projects: searchData.projects.filter(x => has(x.name) || has(x.hub) || has(x.place) || x.brands.some(has) || x.scope.some(has)).slice(0, 6),
       branches: searchData.branches.filter(x => has(x.name) || has(x.no)).slice(0, 6),
       brands:   searchData.brands.filter(x => has(x.name) || x.partners.some(has) || x.branches.some(b => has(b.title))).slice(0, 8),
       partners: searchData.partners.filter(x => has(x.name) || x.brands.some(has) || x.branches.some(has)).slice(0, 8)
@@ -54,10 +60,9 @@
 
   /* ---------------- brand mark ---------------- */
   const markFor = brand => {
-    const si = LOGO[brand.toLowerCase()];
-    return si
-      ? `<img class="lg" src="https://cdn.simpleicons.org/${si}/0B1512" alt="${esc(brand)}" loading="lazy">`
-      : `<span class="mark">${esc(brand.slice(0, 2).toUpperCase())}</span>`;
+    const words = brand.split(/[^A-Za-z0-9]+/).filter(Boolean);
+    const initials = (words.length > 1 ? words.slice(0, 2).map(w => w[0]).join('') : brand.slice(0, 2)).toUpperCase();
+    return `<span class="mark">${esc(initials)}</span>`;
   };
   const withChips = list => list.length
     ? `<div class="chips">${list.map(w => `<button type="button" class="chip act" data-partner="${esc(w)}">${esc(w)}</button>`).join('')}</div>`
@@ -130,22 +135,24 @@
   const LI  = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.5c0-1.3-.02-3-1.83-3-1.84 0-2.12 1.43-2.12 2.9V21h-4V9Z"/></svg>';
 
   $('#foot').innerHTML = `
-    <div class="foot-in">
-      <div><b>Quality — ${esc(COMPANY.branch)}</b><br>${esc(COMPANY.address)}</div>
-      <div style="display:flex;gap:18px;flex-wrap:wrap">
-        <a href="tel:${COMPANY.tel}">${esc(COMPANY.phone)}</a>
-        <a href="mailto:${COMPANY.email}">${esc(COMPANY.email)}</a>
-        <a href="${COMPANY.site}" target="_blank" rel="noopener">qualityegypt.com</a>
+    <div class="wrap">
+      <div class="foot-in">
+        <div><b>Quality - ${esc(COMPANY.branch)}</b><br>${esc(COMPANY.address)}</div>
+        <div style="display:flex;gap:18px;flex-wrap:wrap">
+          <a href="tel:${COMPANY.tel}">${esc(COMPANY.phone)}</a>
+          <a href="mailto:${COMPANY.email}">${esc(COMPANY.email)}</a>
+          <a href="${COMPANY.site}" target="_blank" rel="noopener">qualityegypt.com</a>
+        </div>
       </div>
-    </div>
-    <div class="credit">
-      <span>Made by <span class="who">${esc(AUTHOR.name)}</span></span>
-      <span class="dot"></span>
-      <span>for Quality Egyptian Engineering Projects</span>
-      <span class="soc">
-        <a href="${AUTHOR.github}" target="_blank" rel="noopener">${GH} GitHub</a>
-        <a href="${AUTHOR.linkedin}" target="_blank" rel="noopener">${LI} LinkedIn</a>
-      </span>
+      <div class="credit">
+        <span>Made by <span class="who">${esc(AUTHOR.name)}</span></span>
+        <span class="dot"></span>
+        <span>for Quality Egyptian Engineering Projects</span>
+        <span class="soc">
+          <a href="${AUTHOR.github}" target="_blank" rel="noopener">${GH} GitHub</a>
+          <a href="${AUTHOR.linkedin}" target="_blank" rel="noopener">${LI} LinkedIn</a>
+        </span>
+      </div>
     </div>`;
 
   /* ---------------- search UI ---------------- */
@@ -164,6 +171,9 @@
     const r = search(q);
     if (!r) { closeRes(); return; }
     const out = [];
+    if (r.projects.length) out.push('<div class="sgrp">Landmark projects</div>' + r.projects.map(x =>
+      srow('projects.html#focus=' + encodeURIComponent(x.name), 'site', esc(x.name),
+        esc(x.hub) + ' · ' + esc(x.place) + ' · ' + esc(x.scope.join(' · ')))).join(''));
     if (r.branches.length) out.push('<div class="sgrp">Branches</div>' + r.branches.map(x =>
       srow(file(x.id), esc(x.no), esc(x.name), `${x.count} brands`)).join(''));
     if (r.brands.length) out.push('<div class="sgrp">Brands</div>' + r.brands.map(x =>
@@ -220,9 +230,12 @@
         n: `${m.brands.length} ${m.brands.length === 1 ? 'brand' : 'brands'}`,
         tags: m.brands.map(b => b.b).join(' · ')
       })),
-      {href: 'supply.html', ix: '06', title: 'Supply partners',
+      {href: 'projects.html', ix: '06', title: 'Landmark Projects',
+       n: `${PROJECTS.length} sites · ${PROJECT_HUBS.length} hubs`,
+       tags: PROJECT_HUBS.map(h => h.name).join(' · ')},
+      {href: 'supply.html', ix: '07', title: 'Supply partners',
        n: `${SUPPLY.length} partners`, tags: SUPPLY.slice(0, 8).map(s => s.p).join(' · ') + ' …'},
-      {href: 'contact.html', ix: '07', title: 'Contact', n: 'Cairo, Egypt',
+      {href: 'contact.html', ix: '08', title: 'Contact', n: 'Cairo, Egypt',
        tags: `${COMPANY.phone} · ${COMPANY.email}`}
     ];
 
@@ -236,7 +249,7 @@
 
     const insight = $('#insight');
     if (insight) insight.textContent =
-      `${TOTAL} brand entries across ${MINDMAP.length} branches, supplied by ${SUPPLY.length} partners — ${DIRECT.length} brands bought directly from Quality.`;
+      `${TOTAL} brand entries across ${MINDMAP.length} branches, supplied by ${SUPPLY.length} partners — plus ${PROJECTS.length} landmark sites across ${PROJECT_HUBS.length} worlds.`;
 
     $('#bandcount').textContent = `${SUPPLY.length} partners behind the five branches`;
     $('#bandchips').innerHTML = SUPPLY.map(s => `<span class="chip">${esc(s.p)}</span>`).join('');
@@ -247,6 +260,412 @@
         <ul>${m.brands.map(b => `<li><b>${esc(b.b)}</b><span class="${b.with.length ? '' : 'none'}">${b.with.length ? b.with.map(esc).join(' · ') : 'direct supply'}</span></li>`).join('')}</ul>
         <a class="more" href="${file(m.id)}">Open tab ${BIG}</a>
       </div>`).join('');
+  }
+
+  /* ---------------- landmark projects tab ---------------- */
+  const hubOf = id => PROJECT_HUBS.find(h => h.id === id);
+  const BRAND_LINK = {
+    cisco: 'active.html#focus=Cisco',
+    huawei: 'active.html#focus=Huawei',
+    aruba: 'active.html#focus=Aruba',
+    'd-link': 'active.html#focus=D-Link',
+    commscope: 'passive.html#focus=CommScope',
+    'premium-line': 'passive.html#focus=Premium%20Line',
+    'black stone': 'passive.html#focus=Black%20Stone',
+    legrand: 'passive.html#focus=Legrand',
+    'alcatel-lucent': 'phone.html#focus=Alcatel',
+    mitel: 'phone.html#focus=Mitel'
+  };
+  const scopeClass = s => ({Active:'active', Passive:'passive', WiFi:'wifi', 'IP Telephony':'voice', Cabling:'cabling'}[s] || 'active');
+  const scopeChips = list => `<div class="pscope">${list.map(s =>
+    `<span class="sc sc-${scopeClass(s)}">${esc(s)}</span>`).join('')}</div>`;
+  const projectBrand = b => {
+    const href = BRAND_LINK[b.toLowerCase()];
+    const file = LOGO[b.toLowerCase()];
+    const inner = file
+      ? `<img src="img/brands/${file}" alt="${esc(b)}" title="${esc(b)}" loading="lazy">`
+      : `<span>${esc(b)}</span>`;
+    return href ? `<a class="pbrand" href="${href}">${inner}</a>` : `<span class="pbrand">${inner}</span>`;
+  };
+  const brandImg = b => {
+    const file = LOGO[b.toLowerCase()];
+    return file ? `<img src="img/brands/${file}" alt="${esc(b)}" title="${esc(b)}" loading="lazy">` : '';
+  };
+
+  /* the large preview panel in the portfolio index */
+  const projectPreview = p => {
+    const h = hubOf(p.hub);
+    return `
+      <figure class="pview-media" style="--hc:${h.color}">
+        <img src="${p.photo}" alt="${esc(p.name)} — ${esc(p.place)}" loading="lazy">
+        <span class="pcard-hub"><i></i>${esc(h.name)}</span>
+        <span class="pcard-no">${p.no}</span>
+      </figure>
+      <div class="pview-body">
+        <span class="pcard-loc">${esc(p.place)}</span>
+        <h3>${esc(p.name)}</h3>
+        <div class="pcard-ar" lang="ar" dir="rtl">${esc(p.ar)}</div>
+        <p>${esc(p.summary)}</p>
+        ${scopeChips(p.scope)}
+        <div class="pbrands">${p.brands.map(projectBrand).join('')}</div>
+        <button class="popen" type="button" data-project="${p.id}">Open project ${ARROW}</button>
+      </div>`;
+  };
+  const setProjectPreview = id => {
+    const box = $('#pview');
+    if (!box) return;
+    const p = PROJECTS.find(x => x.id === id);
+    if (!p) return;
+    box.innerHTML = projectPreview(p);
+    box.dataset.current = id;
+  };
+  const syncProjectIndex = () => {
+    if (PAGE !== 'projects') return;
+    const rows = $$('#pindex .prow');
+    $$('#pindex .pgroup').forEach(g => {
+      g.hidden = !g.querySelector('.prow:not([hidden])');
+    });
+    const active = $('#pindex .prow.on');
+    if (!active || active.hidden) {
+      const first = rows.find(r => !r.hidden);
+      if (first) {
+        rows.forEach(r => r.classList.toggle('on', r === first));
+        setProjectPreview(first.dataset.project);
+      }
+    }
+  };
+
+  const PMODAL = document.createElement('dialog');
+  PMODAL.className = 'pmodal';
+  PMODAL.id = 'pmodal';
+  document.body.appendChild(PMODAL);
+
+  const closeProject = () => {
+    if (PMODAL.open && typeof PMODAL.close === 'function') PMODAL.close();
+    else PMODAL.removeAttribute('open');
+    document.body.style.overflow = '';
+  };
+
+  const openProject = id => {
+    const p = PROJECTS.find(x => x.id === id);
+    if (!p) return;
+    const h = hubOf(p.hub);
+    PMODAL.innerHTML = `
+      <button class="pmx" type="button" aria-label="Close project">×</button>
+      <div class="pmmedia">
+        <img src="${p.photo}" alt="${esc(p.name)} — ${esc(p.place)}">
+        <span class="pcard-hub"><i></i>${esc(h.name)}</span>
+      </div>
+      <div class="pmbody">
+        <span class="pcard-loc">${esc(p.place)} · ${esc(h.name)}</span>
+        <h2>${esc(p.name)}</h2>
+        <div class="pcard-ar" lang="ar" dir="rtl">${esc(p.ar)}</div>
+        <p class="pmdetail">${esc(p.detail)}</p>
+        <div class="pmgrid">
+          <div>
+            <h4>Scope</h4>
+            ${scopeChips(p.scope)}
+            <h4 style="margin-top:18px">Brands</h4>
+            <div class="pbrands">${p.brands.map(projectBrand).join('')}</div>
+          </div>
+          <div>
+            <h4>At a glance</h4>
+            <ul class="pmfacts">${p.facts.map(f => `<li>${esc(f)}</li>`).join('')}</ul>
+          </div>
+        </div>
+        <div class="pmfoot">
+          <span>Scope as recorded in the Quality network map.</span>
+          <a href="${p.creditUrl}" target="_blank" rel="noopener">Photo: ${esc(p.credit)}</a>
+        </div>
+      </div>`;
+    if (typeof PMODAL.showModal === 'function' && !PMODAL.open) PMODAL.showModal();
+    else PMODAL.setAttribute('open', '');
+    document.body.style.overflow = 'hidden';
+    const x = $('.pmx', PMODAL);
+    if (x) x.focus();
+  };
+
+  PMODAL.addEventListener('click', e => {
+    if (e.target === PMODAL || e.target.closest('.pmx')) closeProject();
+  });
+  PMODAL.addEventListener('close', () => { document.body.style.overflow = ''; });
+
+  if (PAGE === 'projects') {
+    const brandCount = new Set(PROJECTS.flatMap(p => p.brands)).size;
+    const hubCount = id => PROJECTS.filter(p => p.hub === id).length;
+
+    $('#phero').innerHTML = `
+      <div class="wrap pj-hero-in">
+        <div class="pj-hero-copy">
+          <div class="crumb"><a href="index.html">Network / Data</a> <span>/</span> <span>Landmark Projects</span></div>
+          <span class="eyebrow">Signature portfolio · ${PROJECTS.length} sites</span>
+          <h1>Landmarks that <br><span class="grad">run on Quality.</span></h1>
+          <p class="pj-ar" lang="ar" dir="rtl">مشروعات بارزة وشبكات لا تتوقف.</p>
+          <p class="pj-lede">Presidential palaces, embassies, stadiums, hospitals and the homes people live in — the sites where Quality’s network work becomes part of the building.</p>
+          <div class="pj-actions">
+            <a class="btn btn-p" href="#selected">See the work ${ARROW}</a>
+            <a class="btn btn-o" href="#portfolio">Browse all ${PROJECTS.length} sites</a>
+          </div>
+        </div>
+        <div class="pj-collage" aria-label="A selection of landmark projects">
+          <figure class="big" data-fade>
+            <img src="img/projects/presidential-palace.jpg" alt="Presidential Palace, Heliopolis" loading="eager">
+            <figcaption>Presidential Palace · Heliopolis</figcaption>
+          </figure>
+          <figure data-fade>
+            <img src="img/projects/cairo-stadium-hall.jpg" alt="Cairo Stadium indoor hall" loading="eager">
+            <figcaption>Cairo Stadium Hall</figcaption>
+          </figure>
+          <figure data-fade>
+            <img src="img/projects/heart-institute.jpg" alt="National Heart Institute, Giza" loading="eager">
+            <figcaption>National Heart Institute</figcaption>
+          </figure>
+        </div>
+      </div>
+      <div class="wrap">
+        <div class="pj-stats" data-fade>
+          <div class="pj-stat"><b>${PROJECTS.length}</b><span>landmark sites</span></div>
+          <div class="pj-stat"><b>${PROJECT_HUBS.length}</b><span>project worlds</span></div>
+          <div class="pj-stat"><b>${brandCount}</b><span>technology brands</span></div>
+          <div class="pj-stat"><b>300</b><span>APs in one embassy programme</span></div>
+        </div>
+      </div>`;
+
+    const CASE_TAG = {
+      'capitals-embassies': 'Embassy programme',
+      'cairo-stadium-hall': 'Event-day network',
+      'palm-hills': 'Community infrastructure'
+    };
+    const FEATURED = ['capitals-embassies', 'cairo-stadium-hall', 'palm-hills'];
+    const featureCase = (id, i) => {
+      const p = PROJECTS.find(x => x.id === id);
+      const h = hubOf(p.hub);
+      return `
+      <article class="case${i % 2 ? ' rev' : ''}" style="--hc:${h.color}" data-fade>
+        <figure class="case-media">
+          <img src="${p.photo}" alt="${esc(p.name)} — ${esc(p.place)}" loading="lazy">
+          <button class="case-open" type="button" data-project="${p.id}" aria-label="Open ${esc(p.name)}"></button>
+          <span class="case-no">#${p.no}</span>
+          <figcaption>
+            <span>${esc(CASE_TAG[id] || h.name)}</span>
+            <b>${esc(p.name)} · ${esc(p.place)}</b>
+          </figcaption>
+        </figure>
+        <div class="case-body">
+          <span class="case-kicker">${esc(CASE_TAG[id] || h.name)} · ${esc(h.name)}</span>
+          <h3>${esc(p.name)}</h3>
+          <div class="case-ar" lang="ar" dir="rtl">${esc(p.ar)}</div>
+          <p>${esc(p.detail)}</p>
+          <div class="case-metrics">
+            ${(p.metrics || []).map(([b, s]) => `<div><b>${esc(b)}</b><span>${esc(s)}</span></div>`).join('')}
+          </div>
+          <div class="case-tags">
+            ${scopeChips(p.scope)}
+            <div class="pbrands">${p.brands.map(projectBrand).join('')}</div>
+          </div>
+          <button class="popen" type="button" data-project="${p.id}">Read the case study ${ARROW}</button>
+        </div>
+      </article>`;
+    };
+
+    const groupFor = h => {
+      const list = PROJECTS.filter(p => p.hub === h.id);
+      return `
+      <section class="pgroup" data-hub="${h.id}" style="--hc:${h.color}">
+        <header class="pgroup-head">
+          <span class="pgroup-no">${h.no}</span>
+          <div>
+            <h3>${esc(h.name)} <i lang="ar" dir="rtl">${esc(h.ar)}</i></h3>
+            <p>${esc(h.blurb)}</p>
+          </div>
+        </header>
+        ${list.map(p => `
+          <button class="prow" type="button" id="${p.id}" data-project="${p.id}" data-hub="${p.hub}" data-name="${esc(p.name)}"
+            data-hay="${esc([p.name, p.ar, p.place, p.city, h.name, p.summary, p.scope.join(' '), p.brands.join(' ')].join(' | '))}">
+            <span class="prow-thumb"><img src="${p.photo}" alt="" loading="lazy"></span>
+            <span class="prow-no">${p.no}</span>
+            <span class="prow-main"><b>${esc(p.name)}</b><i>${esc(p.place)}</i></span>
+            <span class="prow-scope">${esc(p.scope.join(' · '))}</span>
+            <span class="prow-arw">${ARROW}</span>
+          </button>`).join('')}
+      </section>`;
+    };
+
+    const BENCH = [
+      ['Cisco', 'Active · Wireless'],
+      ['Huawei', 'Active · Wireless'],
+      ['Aruba', 'Active · Wireless'],
+      ['D-Link', 'Active'],
+      ['CommScope', 'Passive'],
+      ['Premium-Line', 'Passive'],
+      ['Black Stone', 'Passive · Rack'],
+      ['Legrand', 'Passive'],
+      ['Nexans', 'Passive'],
+      ['Alcatel-Lucent', 'IP Telephony'],
+      ['Mitel', 'IP Telephony']
+    ];
+    const benchCard = ([b, layer]) => {
+      const href = BRAND_LINK[b.toLowerCase()];
+      const inner = `${brandImg(b)}<span><i>${esc(layer)}</i></span>`;
+      const label = `${b} — ${layer}`;
+      return href
+        ? `<a class="bbrand" href="${href}" aria-label="${esc(label)}" title="${esc(label)}">${inner}</a>`
+        : `<span class="bbrand" title="${esc(label)}">${inner}</span>`;
+    };
+
+    $('#body').innerHTML = `
+      <section class="section tight" id="selected">
+        <div class="wrap">
+          <div class="sechead">
+            <span class="eyebrow" data-fade>Selected work</span>
+            <h2 data-fade>Three projects, three different problems</h2>
+            <p data-fade>A diplomatic quarter, an event-day arena and a 500-acre community. Different traffic, different risks — one delivery standard.</p>
+          </div>
+          ${FEATURED.map(featureCase).join('')}
+        </div>
+      </section>
+
+      <section class="section alt" id="portfolio">
+        <div class="wrap">
+          <div class="sechead">
+            <span class="eyebrow" data-fade>The full portfolio</span>
+            <h2 data-fade>Every site, one index</h2>
+            <p data-fade>Hover a site to preview it, or open it for the full scope, the brands and the story.</p>
+          </div>
+
+          <div class="pj-filters" id="pfilters" data-fade>
+            <button class="pf on" type="button" data-hub="all" style="--hc:var(--em)">All <b>${PROJECTS.length}</b></button>
+            ${PROJECT_HUBS.map(h => `<button class="pf" type="button" data-hub="${h.id}" style="--hc:${h.color}"><i></i>${esc(h.name)} <b>${hubCount(h.id)}</b></button>`).join('')}
+          </div>
+
+          <div class="filterbar" id="filterbar" hidden></div>
+          <div class="pindex-wrap">
+            <aside class="pview" id="pview" aria-label="Selected project preview"></aside>
+            <div class="pindex" id="pindex">
+              ${PROJECT_HUBS.map(groupFor).join('')}
+            </div>
+          </div>
+          <p class="pj-note" data-fade>Scope is as recorded in the Quality network map. Photographs show the projects or their public settings; images marked <b>illustrative</b> stand in where no public photograph of the site exists. Credits are listed inside each project.</p>
+        </div>
+      </section>
+
+      <section class="section" id="stack">
+        <div class="wrap">
+          <div class="sechead">
+            <span class="eyebrow" data-fade>One standard, every site</span>
+            <h2 data-fade>The layers behind the landmark</h2>
+            <p data-fade>Four disciplines, one delivery model. Every site draws from the same brand bench.</p>
+          </div>
+          <div class="stackgrid">
+            <article class="stackcard" data-fade>
+              <div class="sic">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 17v3M17 17v3M7 11h2M11 11h2M15 11h2"/></svg>
+              </div>
+              <h3>Active networks</h3>
+              <p>Core and access switching, GPON and management — from the comms room to the desk.</p>
+              <div class="pbrands">${['Cisco', 'Huawei', 'Aruba', 'D-Link'].map(projectBrand).join('')}</div>
+            </article>
+            <article class="stackcard" data-fade>
+              <div class="sic">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h9a3 3 0 0 1 0 6H8a3 3 0 0 0 0 6h12"/><path d="M4 4v6M20 14v6"/></svg>
+              </div>
+              <h3>Passive &amp; cabling</h3>
+              <p>Copper, fibre, pathways, patching and the certification that proves the plant.</p>
+              <div class="pbrands">${['Nexans', 'CommScope', 'Premium-Line', 'Black Stone', 'Legrand'].map(projectBrand).join('')}</div>
+            </article>
+            <article class="stackcard" data-fade>
+              <div class="sic">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9a14 14 0 0 1 18 0"/><path d="M6.5 12.5a9 9 0 0 1 11 0"/><path d="M10 16a4 4 0 0 1 4 0"/><circle cx="12" cy="19" r="1"/></svg>
+              </div>
+              <h3>Wireless</h3>
+              <p>Controllers, access points and coverage — dense halls, towers and resorts.</p>
+              <div class="pbrands">${['Huawei', 'Aruba', 'Cisco'].map(projectBrand).join('')}</div>
+            </article>
+            <article class="stackcard" data-fade>
+              <div class="sic">${PHONE}</div>
+              <h3>IP telephony</h3>
+              <p>PBX, handsets and voice over data — one network for the conversation and the file.</p>
+              <div class="pbrands">${['Alcatel-Lucent', 'Mitel'].map(projectBrand).join('')}</div>
+            </article>
+          </div>
+
+          <div class="brandbench" data-fade>
+            <div class="bbhead">
+              <div>
+                <span class="eyebrow">The bench</span>
+                <h3>Eleven brands. One installation standard.</h3>
+              </div>
+              <p>Every mark below appears on at least one landmark site — active, passive, wireless or voice.</p>
+            </div>
+            <div class="bbgrid">${BENCH.map(benchCard).join('')}</div>
+            <p class="bbnote">All trademarks and logos are the property of their respective owners.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section alt" id="footprint">
+        <div class="wrap footprint">
+          <div>
+            <span class="eyebrow" data-fade>Footprint</span>
+            <h2 data-fade style="margin-top:14px">Cairo to the Mediterranean</h2>
+            <p data-fade class="muted" style="max-width:46ch;margin-top:10px">Six cities, one delivery standard. Open a site above to see what was installed where.</p>
+          </div>
+          <div class="cities" data-fade>
+            ${PROJECT_CITIES.map(c => {
+              const n = PROJECTS.filter(p => p.city.split('/').map(s => s.trim()).includes(c)).length;
+              return `<span class="city"><b>${esc(c)}</b><i>${n} site${n === 1 ? '' : 's'}</i></span>`;
+            }).join('')}
+          </div>
+        </div>
+      </section>
+
+      <section class="section tight">
+        <div class="wrap">
+          <div class="pj-cta" data-fade>
+            <div>
+              <span class="eyebrow">Next landmark</span>
+              <h2>Your building could be on this map.</h2>
+              <p>Talk to the Network / Data team about active, passive, wireless and voice scope for your next project.</p>
+            </div>
+            <a class="btn btn-w" href="contact.html">Start a conversation ${ARROW}</a>
+          </div>
+        </div>
+      </section>`;
+
+    /* preview + index interaction */
+    setProjectPreview(PROJECTS[0].id);
+    const rows = $$('#pindex .prow');
+    const first = rows[0];
+    if (first) first.classList.add('on');
+    rows.forEach(row => {
+      const on = () => {
+        rows.forEach(r => r.classList.toggle('on', r === row));
+        setProjectPreview(row.dataset.project);
+      };
+      row.addEventListener('mouseenter', on);
+      row.addEventListener('focus', on);
+      row.addEventListener('click', () => {
+        rows.forEach(r => r.classList.toggle('on', r === row));
+        setProjectPreview(row.dataset.project);
+      });
+    });
+
+    /* modal open / close */
+    document.addEventListener('click', e => {
+      const b = e.target.closest('[data-project]');
+      if (!b || b.closest('.pmodal')) return;
+      openProject(b.dataset.project);
+    });
+    addEventListener('keydown', e => {
+      if (e.key === 'Escape' && PMODAL.open) closeProject();
+    });
+
+    /* hub filter + search */
+    $$('#pfilters .pf').forEach(btn => btn.addEventListener('click', () => {
+      projectHub = btn.dataset.hub;
+      $$('#pfilters .pf').forEach(b => b.classList.toggle('on', b === btn));
+      applyFilter(barq ? barq.value : '');
+    }));
   }
 
   /* ---------------- branch tabs ---------------- */
@@ -337,7 +756,7 @@
           <p class="blurb">The distributor and supplier network behind every Quality branch.</p>
           <p class="note">${SUPPLY.length} partners, each mapped to the brands and branches it serves. Direct-supply brands carry no partner.</p>
         </div>
-        <div class="no">06</div>
+        <div class="no">07</div>
       </div>`;
 
     $('#body').innerHTML = `
@@ -408,7 +827,7 @@
           <h1>Contact</h1>
           <p class="blurb">Talk to the Network / Data team in Cairo.</p>
         </div>
-        <div class="no">07</div>
+        <div class="no">08</div>
       </div>`;
 
     $('#body').innerHTML = `
@@ -506,9 +925,16 @@
 
   /* ---------------- search + filter wiring ---------------- */
   const heroq = $('#heroq'), barq = $('#barq');
-  const target = PAGE === 'home' ? $('#nodes') : (branch ? $('#cards') : (PAGE === 'supply' ? $('#pcards') : null));
-  const cardSel = PAGE === 'home' ? '.row' : (branch ? '.bcard' : '.scard');
-  const label = PAGE === 'home' ? 'sections' : (branch ? 'brands' : 'partners');
+  const target = PAGE === 'home' ? $('#nodes')
+    : (branch ? $('#cards')
+    : (PAGE === 'supply' ? $('#pcards')
+    : (PAGE === 'projects' ? $('#pindex') : null)));
+  const cardSel = PAGE === 'home' ? '.row'
+    : (branch ? '.bcard'
+    : (PAGE === 'projects' ? '.prow' : '.scard'));
+  const label = PAGE === 'home' ? 'sections'
+    : (branch ? 'brands'
+    : (PAGE === 'projects' ? 'sites' : 'partners'));
   const filterbar = $('#filterbar');
 
   const applyFilter = q => {
@@ -516,9 +942,11 @@
     const t = q.trim().toLowerCase();
     const items = $$(cardSel, target);
     items.forEach(c => {
-      c.hidden = !!t && !(c.dataset.hay || '').toLowerCase().includes(t);
+      const hubOk = PAGE !== 'projects' || projectHub === 'all' || c.dataset.hub === projectHub;
+      c.hidden = !hubOk || (!!t && !(c.dataset.hay || '').toLowerCase().includes(t));
       if (!c.hidden) c.classList.add('in');
     });
+    if (PAGE === 'projects') syncProjectIndex();
     if (!filterbar) return;
     const n = items.filter(c => !c.hidden).length;
     filterbar.hidden = !t;
@@ -563,6 +991,7 @@
       hl.textContent.trim(),
       `${TOTAL} brand entries across ${MINDMAP.length} branches`,
       `${SUPPLY.length} supply partners behind the brands`,
+      `${PROJECTS.length} landmark sites across ${PROJECT_HUBS.length} worlds`,
       `${DIRECT.length} brands supplied directly by Quality`
     ];
     let k = 0;
@@ -573,17 +1002,42 @@
     }, 3600);
   }
 
-  /* #focus= highlights a brand / partner card */
-  const fm = location.hash.match(/^#focus=(.+)$/);
-  if (fm) {
+  /* #focus= highlights a brand / partner card, or opens a landmark project */
+  const focusFromHash = () => {
+    const fm = location.hash.match(/^#focus=(.+)$/);
+    if (!fm) return;
+    if (PAGE === 'projects') {
+      projectHub = 'all';
+      $$('#pfilters .pf').forEach(b => b.classList.toggle('on', b.dataset.hub === 'all'));
+      [heroq, barq].forEach(i => { if (i) i.value = ''; });
+      applyFilter('');
+    }
     const name = decodeURIComponent(fm[1]);
-    const el = $$('.bcard,.scard').find(c => c.dataset.name === name);
-    if (el) {
-      el.hidden = false;
-      el.classList.add('in', 'flash');
+    const el = $$('.bcard,.scard,.pcard,.prow').find(c => c.dataset.name === name);
+    if (!el) return;
+    el.hidden = false;
+    el.classList.add('in', 'flash');
+    if (PAGE === 'projects' && el.dataset.project) {
+      setTimeout(() => openProject(el.dataset.project), 220);
+    } else {
       setTimeout(() => el.scrollIntoView({behavior: 'smooth', block: 'center'}), 160);
     }
-  }
+  };
+  focusFromHash();
+  addEventListener('hashchange', focusFromHash);
+
+  /* #<project-id> deep links (used by the ItemList JSON-LD) */
+  const openProjectFromHash = () => {
+    if (PAGE !== 'projects') return;
+    const id = location.hash.slice(1);
+    if (!id || id.startsWith('focus=')) return;
+    const el = document.getElementById(id);
+    if (!el || !el.classList.contains('prow')) return;
+    el.classList.add('in');
+    openProject(el.dataset.project);
+  };
+  openProjectFromHash();
+  addEventListener('hashchange', openProjectFromHash);
 
   /* ---------------- reveal once ---------------- */
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) {

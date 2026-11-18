@@ -2,7 +2,7 @@
 
 [![Live site](https://img.shields.io/badge/live%20site-seifmomo.github.io-0F7A52?style=flat-square)](https://seifmomo.github.io/quality-network-map/)
 [![Repo](https://img.shields.io/badge/repo-seifmomo%2Fquality--network--map-2f9e6b?style=flat-square)](https://github.com/seifmomo/quality-network-map)
-[![Tabs](https://img.shields.io/badge/sections-7%20tabs%20%2B%20home-F26522?style=flat-square)](#the-tabs)
+[![Tabs](https://img.shields.io/badge/sections-8%20tabs%20%2B%20home-F26522?style=flat-square)](#the-tabs)
 
 ### ➜ **Live: https://seifmomo.github.io/quality-network-map/**
 
@@ -15,7 +15,8 @@ then the top bar slides in only once the hero has been scrolled past.
 
 | Tab | Page | Contents |
 | --- | --- | --- |
-| Home | `index.html` | Logo hero, section list, the whole map (27 brands in 5 columns), partners band, brand wall |
+| Home | `index.html` | Logo hero, section list, the whole map (27 brands in 5 columns), partners band, landmark-projects feature |
+| Landmark Projects | `projects.html` | 13 signature sites, 3 case studies, filterable index, brand bench |
 | Active / WiFi | `active.html` | Huawei, Cisco, Aruba, D-Link, TP-Link |
 | Industrial SW | `industrial.html` | Planet, Antaira, TrendNet, Huawei iMaster |
 | Passive | `passive.html` | Legrand, Leviton, Panduit, Datwyler, CommScope, Pro Link, Black Stone, El Sweedy, Premium Line |
@@ -24,7 +25,7 @@ then the top bar slides in only once the hero has been scrolled past.
 | Supply partners | `supply.html` | All 18 partners + the branches each one serves |
 | Contact | `contact.html` | Phone, email, address, website, enquiry form |
 
-**5 branches · 27 brand entries · 18 supply partners · 4 direct-supply brands**
+**5 branches · 27 brand entries · 18 supply partners · 4 direct-supply brands · 13 landmark sites**
 
 ---
 
@@ -49,7 +50,7 @@ Hovering a row highlights the whole line.
    hover and stays static under `prefers-reduced-motion`.
 3. A **search field** — `Search 25 brands, 18 partners…` — then three **quick chips**:
    *Who supplies Huawei?* · *Single-source risks* · *Direct brands*.
-4. A **clean list of the seven sections** — number, name, count and the brands inside, each row a
+4. A **clean list of the eight sections** — number, name, count and the brands inside, each row a
    full-width link that slides slightly and grows a green edge on hover. Typing in the search
    **filters these rows live**.
 5. The whole hero fits one screen (≈820 px tall), with no headings or clutter.
@@ -59,20 +60,32 @@ Hovering a row highlights the whole line.
 
 Straight after the hero comes a one-line **insight sentence**, the map itself — all 27 brand
 entries in five branch columns — and a **partners band** listing all 18 supply partners with a
-link into the Supply partners tab.
+link into the Supply partners tab. The chooser closes with a **Landmark Projects** feature band.
+
+## Landmark Projects
+
+`projects.html` is the signature portfolio: a photographic hero, three large alternating case
+studies — the embassies in the New Administrative Capital, Cairo Stadium Hall and Palm Hills New
+Cairo — then a filterable index of all 13 sites with a sticky preview panel and a full project
+modal for each. It closes with the four delivery layers, a bench of the **11 brand logos** used on
+those sites, the footprint and a contact call-to-action.
+
+Project photography lives in `img/projects/`; brand logos are local files in `img/brands/`, so the
+page has no runtime logo-CDN dependency. Each project modal carries its photo credit and scope.
 
 ## Search & click-to-answer
 
 - **Search** sits in the top bar on every page (and the hero on home). Press `/` to focus it,
-  `Esc` to clear. Results are grouped **Branches / Brands / Partners** — searching `Huawei` finds
-  the brand *and* the four partners that supply it; `Universe` finds the partner and its four
-  brands.
+  `Esc` to clear. Results are grouped **Branches / Landmark projects / Brands / Partners** —
+  searching `Huawei` finds the brand *and* the four partners that supply it; `Universe` finds the
+  partner and its four brands; `Cairo Stadium` opens the project.
 - On a branch or partner tab the search also **filters the visible cards** and shows an
   `n of m shown` counter with a Clear button.
 - **Click any supply-partner chip** on a brand card to spotlight that partner's brands.
 - Brands that span branches — **Huawei** and **Black Stone** — carry an **“Also in …”** link.
 - Landing on `active.html#focus=Huawei` (or any `#focus=` brand/partner) highlights and scrolls
-  to that card.
+  to that card. On the projects page, `#focus=Project Name` opens the project modal, and the
+  project rows also accept simple `#project-id` anchors such as `projects.html#palm-hills`.
 
 ## Insights
 
@@ -99,15 +112,16 @@ tab.
 ## Layout
 
 ```
-index.html  active.html  industrial.html  passive.html
-rack.html   phone.html   supply.html      contact.html
+index.html  projects.html  active.html  industrial.html  passive.html
+rack.html   phone.html     supply.html  contact.html
 assets/data.js             content — the single source of truth
 assets/app.js              rendering, bar, hero, search, insights, reveals, form
 assets/style.css           design system
 assets/icon.svg            tab icon — Quality swoosh on white
 assets/apple-touch-icon.png
 img/quality-logo.png       Quality logo (dark, for the white UI)
-img/brand-wall.jpg
+img/projects/              13 landmark-project photographs
+img/brands/                11 brand logos used on the projects page
 img/preview.png            home preview for this README
 img/og.png                 1200×630 social share card
 robots.txt  sitemap.xml    crawler + indexing
@@ -134,6 +148,10 @@ JSON-LD (`Organization` + `WebSite`).
 Transcribed from the Quality Network mind map (`Quality → Network / Data`). Spellings kept as
 supplied (`Grand Steem`, `El Con Novd`, `Intepris / E-Kit`); `Brand-Connection` normalised to
 `Brand Connection` and `Silicon21 + Middle East` split into `Silicon 21` and `Middle East`.
+
+The Landmark Projects section combines the site names and network scope from the infrastructure
+projects mind map with public project information and photography. Photo credits and source links
+are shown inside each project modal; illustrative images are labelled in the index note.
 
 ## Licence
 
